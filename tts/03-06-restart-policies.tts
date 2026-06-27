@@ -1,0 +1,7 @@
+Restart policies.
+
+By default, a container that exits stays exited. But production services need to recover from crashes and from host reboots, and that is what the restart flag controls.
+
+There are four policies. No, the default, means never restart. On-failure, with an optional retry count, restarts only if the container exits with a non-zero code. Always restarts the container whenever it exits and whenever the daemon starts, so it comes back after a daemon restart or a host reboot, and notably it comes back even if you stopped it manually. And unless-stopped behaves like always, except that if you explicitly stop it, it stays stopped across daemon restarts. That last one is the usual production choice, and a typical production line runs a container detached with the restart policy set to unless-stopped and a clear name.
+
+A few details bite people. The restart policy only applies after the first successful start, so a container that fails to start at all, because of a bad image or a syntax error, does not get retried. The restart backoff is exponential and capped at about a minute, so a crash-looping container does not hammer the host. The restart counter resets once the container has run successfully for ten seconds. The restart flag and the remove-on-exit flag are mutually exclusive, so you pick one. And you can inspect a container to read back both its policy and how many times it has actually restarted.

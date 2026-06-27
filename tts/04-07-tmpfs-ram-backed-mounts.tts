@@ -1,0 +1,7 @@
+T-m-p-f-s, ram-backed mounts.
+
+A t-m-p-f-s mount is a chunk of the host's ram that the container sees as a filesystem at a path you choose. Nothing of it ever lands on disk, and the data vanishes the moment the container stops. You can set its size and permission mode when you create it.
+
+It is good for three things. The first is high-throughput scratch, things like build steps, compilers, or cache dumps, anything that wants a fast filesystem and has no need to survive. The second is secrets you do not want on disk, where you mount a t-m-p-f-s at a path and write tokens there so the host's disk never touches them. The third is making a read-only container workable, where you combine the read-only flag, which freezes the whole root filesystem, with small t-m-p-f-s mounts at the few paths that processes insist on writing to, like the temp directory, so they have somewhere to scribble.
+
+There are two ways to ask for one. The short t-m-p-f-s flag is quick and handles the common case, while the long mount form, with a type of t-m-p-f-s, accepts more options when you need them. Either way, the defining feature is the same. It is fast, it is in memory, and it is gone when the container is gone.

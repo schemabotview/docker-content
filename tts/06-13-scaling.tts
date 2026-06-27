@@ -1,0 +1,7 @@
+Scaling.
+
+Compose can run several copies of a service with a scale flag, so asking for three of the web service starts three containers. Compose numbers them, attaches them all to the project network, and gives them all the same d-n-s name, so the embedded resolver round-robins requests across their addresses. It is a quick way to fan out a service.
+
+This is good for two things in particular. One is local load testing, where you want several instances to push traffic at. The other is horizontally scalable stateless services, the classic web tier, where any instance can handle any request because they hold no local state.
+
+But there are clear limits, and they trip people up. Published ports do not scale this way, because if the service pins a specific host port, only one replica can bind it and the rest fail, so to scale a published service you drop the fixed host port and put a load balancer in front, or use a port range. Stateful services do not scale this way either. Running several database containers against the same data directory just makes them fight, so you do not scale a database with this flag. And genuine production scaling across multiple machines is the job of swarm or kubernetes. Single-host compose can only ever scale up to the limits of one machine, and it is important to be honest with yourself about that boundary.

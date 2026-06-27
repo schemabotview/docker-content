@@ -1,0 +1,9 @@
+The lifecycle in depth.
+
+Notebook one sketched the container lifecycle. Now let us fill in the full state diagram and the commands that move a container between states.
+
+Picture it. Starting from an image, docker create produces a container in the created state. Docker start moves it to running. From running, docker pause freezes it into the paused state, and docker unpause brings it back. Also from running, docker stop sends a graceful sig-term, waits a grace period, and follows up with sig-kill if needed, leaving the container stopped. Docker kill skips straight to sig-kill. And the container can simply exit on its own. From stopped, docker start brings it back to running, or docker remove deletes it for good.
+
+Now the commands. Docker create sets up a container but does not start it, allocating its writable layer and assigning its I-D, and it is rarely used directly because docker run is create plus start together. Docker start runs a created or stopped container, keeping its existing writable layer so previously written files are still there. Docker stop is the graceful stop that production deploys use, sending sig-term and then sig-kill after a configurable timeout. Docker kill is an immediate sig-kill with no grace period. Docker restart is stop then start in one call. Docker pause and unpause freeze and thaw all the container's processes using the kernel's freezer, leaving them in memory but unscheduled, which is useful for consistent snapshots. And docker remove deletes a stopped container and releases its writable layer, with a force flag to remove a running one and a volumes flag to also drop its anonymous volumes.
+
+The matching inspection commands are the container listing, with flags to include stopped containers, print just I-Ds, or filter by status, and docker inspect, which gives you the full j-son state of a container.

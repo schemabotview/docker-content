@@ -1,0 +1,7 @@
+Project name, what it means and why duplicates collide.
+
+Compose namespaces everything it creates under a project name. Container names, network names, and volume names all get the project name as a prefix, and every object also gets a label recording which project it belongs to. By default the project name is the name of the directory containing the compose file, and you can override it with a name key at the top of the file, a project flag on the command line, or an environment variable.
+
+This is exactly why two checkouts of the same repository can collide. If you clone the same project into two different directories and bring each one up, they both default their project name to the same thing, because they share a directory name. So they fight over container and volume names, and the second one either errors or steals the first one's containers. The whole confusing episode comes down to the shared default project name.
+
+The fix is to give each checkout a unique project name. The simplest approach is just to rename one of the directories, and the explicit approach is to pass a distinct project name on the command line or set it in that checkout's dot env file. Once each instance has its own project name, they namespace cleanly and stop interfering with each other.

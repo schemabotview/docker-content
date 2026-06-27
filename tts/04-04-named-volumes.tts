@@ -1,0 +1,7 @@
+Named volumes, the default choice.
+
+A named volume is storage managed entirely by docker. You give it a name, docker decides where on disk it lives, and you mount it into containers by name. The full lifecycle is four commands, to create a volume, list your volumes, inspect one, and remove one. Inspecting a volume shows you its mount point on the host, its driver, which is local by default, and its labels and creation date.
+
+To use one, you mount it into a container with a source-colon-destination syntax that reads, mount this named volume at this path inside the container. A nice convenience is that docker auto-creates the volume if it does not exist yet, though production scripts usually create it explicitly first. The key payoff is durability. Removing the container later does not touch the volume, so you can spin up a brand new container with the same mount and your data is still there.
+
+There is one behaviour worth knowing well. When you mount an empty volume over a container path that already had files baked into the image, docker copies those image contents into the volume before mounting it. Later mounts do not re-copy. This is exactly what lets a database image just work on its first run, because docker seeds the volume with the freshly initialised data directory and then preserves whatever the database writes afterwards. Importantly, this seeding only happens for volumes. A bind mount unconditionally hides whatever was at the container path.

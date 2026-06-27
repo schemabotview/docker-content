@@ -1,0 +1,7 @@
+Depends-on with healthchecks, startup order that actually works.
+
+A plain depends-on list is doing less than most people think. By default, it makes compose start the database before the web service, but the database container is considered up after a millisecond, while the actual database server inside it does not accept connections for another second or two. So the web service can start, try to connect, and crash before the database is truly ready. The dependency only waits for the container to have started, not for the service inside it to be ready.
+
+The fix is to combine depends-on with a healthcheck and a condition. You give the database a healthcheck, a small command that probes whether it is genuinely accepting connections, run on an interval with a timeout, a retry count, and a grace start period. Then you change the web service's dependency from a simple list into a map that says, depend on the database with the condition that it is healthy. Now compose starts the database, polls its healthcheck, and only starts the web service once that healthcheck reports healthy.
+
+There are a few conditions you will see. Service-started is the old default that just waits for the container to start. Service-healthy waits for the healthcheck to pass. And service-completed-successfully waits for a one-shot service, like a migration container, to finish and exit cleanly. The depend-on-service-healthy pattern is the standard, production-quality compose idiom, and it is worth memorising, because it eliminates a whole category of flaky startup races.

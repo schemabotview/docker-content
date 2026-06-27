@@ -1,0 +1,11 @@
+Command versus entry-point, the confusing pair.
+
+These are the two instructions almost everyone gets wrong at first. Both set what the container runs by default. The difference is in how they combine, and in how arguments you pass at run time override them.
+
+Here is the mental model. Command sets default arguments, and anything you pass to docker run replaces them wholesale. Entry-point sets a fixed executable, and anything you pass to docker run is appended to it. So the final command the container runs equals the entry-point, followed by either your run-time arguments or, if you gave none, the command.
+
+Working through the combinations makes it click. With only a command set, running the image runs that command, but passing your own arguments replaces it entirely. With only an entry-point set, running the image runs the entry-point, and passing arguments appends them after it. And with both set, the entry-point is the fixed program and the command supplies default arguments that your run-time arguments override. That last combination is the most useful pattern.
+
+A couple of practical rules. For a single program that takes flags from the user, think of a tool like curl, use entry-point for the program and command for its default arguments. For a long-lived service that reads its configuration from environment variables, just use command and leave entry-point unset, so a user can still drop into a shell by overriding it. And always prefer exec form over shell form, because shell form forks a shell as process one, which means signals like the sig-term from docker stop do not reach your application cleanly.
+
+One related gotcha. Even with exec form, your process one is solely responsible for reaping zombie children and handling signals, and most runtimes like python and node were never designed to be process one. Running with the init flag, or setting init to true in compose, makes docker inject a tiny init called tini as process one, which handles signals and zombies correctly and then runs your process.

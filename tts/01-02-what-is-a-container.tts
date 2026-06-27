@@ -1,0 +1,15 @@
+What is a container.
+
+Let us start with the one sentence that everything else in this course hangs from. A container is an isolated process tree running on a host, with its own filesystem and its own network view, while sharing the host's kernel. Read that again, because every word is load-bearing.
+
+Take it piece by piece. An isolated process tree means that when you start a container, the kernel hands it its own process namespace. Inside, the first process is process I-D one, and a listing of running processes shows only the container's own. From the host those same processes are still there, just with different numbers. The kernel is simply telling the container a smaller story about who else is running.
+
+Its own filesystem means the container sees a root directory that was assembled from an image, a packaged stack of files someone built earlier. Its slash e-t-c and slash you-ess-are are not your machine's slash e-t-c and slash you-ess-are. They live in a separate area on disk and get mounted in when the container starts.
+
+Its own network means the container gets a virtual network interface with its own eye-pee address, usually on a bridge that docker manages. The sockets it opens belong to it, not to your host.
+
+And here is the punchline. Sharing the host's kernel means a container does not boot its own operating system. There is no second kernel inside it. Every system call the container makes goes straight to your host's kernel. That is exactly why a container starts in milliseconds, weighs megabytes instead of gigabytes, and cannot run a kernel different from the host's.
+
+Picture two stacks side by side. On the left, virtual machines, where every application carries its own libraries and a full guest operating system, all sitting on a hypervisor. On the right, containers, where every application carries its libraries but they all share one thin docker engine sitting directly on the host kernel. A virtual machine virtualises the hardware, so it is heavy but strongly isolated. A container virtualises the operating system, so it is light and fast, with isolation that is kernel-strong rather than hypervisor-strong.
+
+One last point. Docker did not invent any of this. It composes linux features that already existed. Namespaces give each container its own view of processes, mounts, network, users, and hostnames. Control groups, spoken as see groups, meter and cap how much see-pee-you, memory, and input output a container may use. Capabilities slice the all-powerful root account into dozens of smaller privileges. And sec-comp, app-armor, and ess-ee-linux limit which system calls are even allowed. We will meet each of these properly later. For now, just hold the idea that docker is a friendly front end over kernel tools that were already there.

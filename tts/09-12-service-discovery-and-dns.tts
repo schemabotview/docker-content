@@ -1,0 +1,7 @@
+Service discovery and d-n-s.
+
+A service named, say, a-p-i is reachable on its overlay network simply by that hostname, and there are two flavours of how that name resolves. The default is virtual-address mode, where the name resolves to a single stable virtual address, and the kernel load-balances incoming connections across all the healthy tasks behind it. Clients see just one address and never need to know how many replicas there are or that they come and go. The alternative is round-robin mode, where the name resolves to the addresses of all the current tasks, and each lookup hands back a different one, leaving the client to pick and to retry if it hits a task that has just gone away. You choose between them with an endpoint-mode setting in the deploy block.
+
+The guidance is to use virtual-address mode for almost everything, because it is stable, fast in the kernel, and completely transparent as tasks appear and disappear. Reserve round-robin mode for clients that do their own load balancing and genuinely want the raw list of target addresses, like some service meshes and custom protocols.
+
+One scoping rule matters for security and design. Swarm's d-n-s only resolves names within the same overlay network. A service on one network cannot resolve a service that lives only on a different network. That is by design, and it is the same tier-isolation idea from earlier, where keeping the database on a back-end network that the front end cannot even resolve is a feature, not a limitation.

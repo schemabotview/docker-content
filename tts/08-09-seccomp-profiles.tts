@@ -1,0 +1,7 @@
+Secure-computing profiles.
+
+Secure computing mode is a kernel feature that filters which system calls a process is allowed to make. Docker applies its default profile to every container, blocking around fifty system calls that have a history of vulnerabilities or that normal applications simply do not need, things like mounting filesystems and rebooting the host. For the great majority of containers, that default profile is exactly right and you never have to think about it.
+
+To tighten further, you can point a container at a custom profile with a security option. A custom profile is an allow-list that lets through only the system calls your app actually uses, and you do not have to write it by hand from nothing, because tracing tools can watch your app under normal load and emit a minimal profile for you. That gives you a much smaller system-call surface tailored to your specific workload.
+
+There is also a way to disable secure computing entirely, by setting the profile to unconfined, and you should resist it. Disabling it is what a lot of give-up posts online recommend when a container hits a blocked system call, but it throws away one of your best defences. If a system call is being blocked, the better fix is almost always to fix the application or to add that one call to the profile, not to remove the filter altogether.

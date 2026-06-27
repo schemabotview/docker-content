@@ -1,0 +1,7 @@
+A first compose file, web plus database.
+
+Let us look at a simple example with two services. A database service uses a postgres image, sets a couple of environment variables for its password and database name, and mounts a named volume at the postgres data directory. A web service uses a web-server image, publishes a host port to its container port, and declares that it depends on the database. At the bottom of the file, the named volume is declared.
+
+There are three things worth noticing here. First, there is no explicit network, so both services land on the project's default network and the web service can reach the database by its service name automatically, the same embedded-d-n-s behaviour from notebook five. Second, the named volume is declared once at the top level and referenced inside the database service, and compose creates it on the first bring-up. Third, the dependency on the database means compose starts the database first, then the web service, although we will see in the next section why that ordering is not quite enough on its own.
+
+Bringing it up and working with it is a handful of commands. You bring the stack up in detached mode, list what is running, tail the web logs, and tear it down when you are done. The plain tear-down leaves volumes in place so your data survives, and only adding the volumes flag actually wipes the named volumes. That distinction matters, so hold onto it.

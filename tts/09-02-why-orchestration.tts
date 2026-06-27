@@ -1,0 +1,7 @@
+Why orchestration.
+
+Compose got us to a multi-container app on a single host, which is already useful, but it hits a wall fast. What if one host is not enough capacity. What happens when that host dies. Compose has no answer there, because your stack is simply down until you rebuild the machine. How do you do a rolling deploy without taking traffic offline. How do you keep secrets off disk on every machine that runs the service. And how do services on different hosts find each other by name. Compose answers none of these.
+
+An orchestrator answers all of them. It manages a pool of hosts, called a cluster, accepts a statement of desired state, like, I want three replicas of this service, and then continuously reconciles reality back to that state. A node dies, and it launches replacement replicas elsewhere. A new image is deployed, and replicas roll forward one at a time. A service publishes a port, and it routes traffic to whichever node has a healthy replica. The shift in mindset is from running containers by hand to declaring what you want and letting the system maintain it.
+
+For the docker world, two orchestrators matter. There is docker swarm, which is built into docker, simpler, and what the certification exam tests. And there is kubernetes, which is more powerful, more complex, and the industry default for non-trivial production. This notebook covers swarm, both because it is the exam's scope and because its concepts transfer directly to kubernetes later.

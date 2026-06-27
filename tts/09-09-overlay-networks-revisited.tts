@@ -1,0 +1,7 @@
+Overlay networks revisited.
+
+Notebook five introduced overlay networks as the multi-host bridge, and in swarm they are how every service communicates across nodes. You create one with the overlay driver, and optionally make it attachable, which lets standalone containers, not just swarm services, join it, which is handy for debugging. Under the hood an overlay tunnels each cross-host packet inside an ordinary datagram that travels between nodes, so to the containers it all looks like one flat local-area network regardless of which machine they are on.
+
+Once two services share an overlay network, they reach each other by service name, because swarm runs the same embedded d-n-s resolver from notebook five, just cluster-wide. So a web service can reach an a-p-i service simply by its name, with no awareness of how many replicas exist or where they live.
+
+Two nuances are worth holding onto. First, all the tasks of a service share a single virtual address, and the kernel load-balances connections across all the healthy tasks behind it, no matter which nodes they sit on, so the caller sees one stable target. Second, encryption is opt-in. You can add an option to encrypt the traffic between nodes on a given overlay network, and that encryption is already on by default for the built-in ingress network. So overlays give you flat, name-based, load-balanced connectivity across the whole cluster, with optional encryption when you need it.

@@ -1,0 +1,7 @@
+Placement, putting tasks on the right nodes.
+
+Sometimes you care which class of node a task lands on. The database must sit on a node with fast solid-state storage. A legacy app must run on a particular architecture. Or you want at most a couple of replicas on any single node so that one node failing does not take them all down. Swarm gives you three tools for this, in the deploy block.
+
+Constraints are hard requirements. You express them as conditions like the node's role, a custom label you have attached, or its operating system and architecture, and a task will only be scheduled on a node that satisfies all of them. You attach those custom labels to nodes yourself with a node-update command, which is how you mark, for instance, which machines have solid-state storage. Preferences are soft hints rather than rules, used to spread tasks evenly across, say, datacenters, where swarm tries to honour them but will not refuse to schedule if it cannot.
+
+The third tool is a cap on replicas per node, which limits how many replicas of a service may run on any single machine. If you ask for nine replicas with a cap of two per node, you need at least five eligible nodes for swarm to place them all. Together, these let you express real operational intent, put the data here, spread the web tier around, never pile everything onto one box, and have the scheduler enforce it for you automatically.

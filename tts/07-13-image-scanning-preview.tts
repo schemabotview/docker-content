@@ -1,0 +1,7 @@
+Image scanning preview.
+
+Modern registries scan pushed images against vulnerability databases and flag known issues, usually grouped into severity buckets with links to the upstream advisory. The scan results live alongside the image and can be fetched through an a-p-i, which makes them easy to build into your workflow.
+
+There are a few common patterns for using them. One is a continuous-integration gate, where you fail the build if a new image introduces a high or critical vulnerability that was not already present in the base image. Another is the choice of tooling, where you might use a standalone scanner or the registry's own built-in one. And a third is admission control, where a kubernetes cluster refuses to schedule images that have not been scanned, or that carry unmitigated critical findings. Running a scanner against an image produces a list showing the image and its base, a total count broken down by severity, and one row per finding with the affected library, the vulnerability identifier, the severity, the installed version, and the version that fixes it.
+
+It helps to see scanning as one half of a pair. Scanning is the detection half, telling you what is wrong with an image you already built. Supply-chain hygiene is the prevention half, reducing the surface area in the first place with smaller bases, non-root users, distroless images, and dropped capabilities. Notebook eight goes deep on that prevention side, so treat this section as the detection preview and the security notebook as where you learn to make there be far less to detect.

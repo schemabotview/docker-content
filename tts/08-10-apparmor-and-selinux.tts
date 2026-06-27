@@ -1,0 +1,7 @@
+App-armor and ess-ee-linux.
+
+These are the two mandatory-access-control systems that linux distributions ship. They sit on top of ordinary file permissions and decide which paths, capabilities, and operations a process is allowed to perform, adding a second layer of control beyond the usual ownership and mode bits.
+
+App-armor is the one on the debian and ubuntu family. Docker ships a default profile that is applied automatically when app-armor is enabled, and it restricts containers from writing to most of the process filesystem, from mounting filesystems, from raw networking, and so on. You can point a container at your own custom profile when you need to. Ess-ee-linux is the one on the red hat family. It uses a different model, type enforcement, where every file and process carries a label and only matching labels may interact, and docker sets appropriate container labels through a security option.
+
+The honest guidance is that you usually do not touch either of these directly. They are applied by default, and the defaults are sensible. You tune them when an audit asks why a particular container has more access than it needs, and otherwise you leave them alone. If you do not have a specific reason to override the default profile, the default is the correct choice, and overriding it casually is more likely to open a hole than to close one.

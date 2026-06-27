@@ -1,0 +1,7 @@
+The root-in-container problem.
+
+By default, a container's main process runs as root inside its namespace, as user-I-D zero. People often wave this away with, it is just root inside the container, that does not matter. It mostly does matter, and it is worth seeing why.
+
+Root in the container can modify any file in the container's filesystem, including files bind-mounted in from the host as root. It can bind to privileged ports inside the container. It can use any capability the container still holds, and in the default configuration that is quite a few. It can take advantage of a kernel vulnerability, of which there are several a year, to escape into the host's context. And it can read its own credentials, including any secrets passed in through environment variables.
+
+On top of that, files the container creates on a bind-mounted host directory are owned by user-I-D zero on the host, unless you have set up user-namespace remapping. So a root-in-container with a host bind mount is effectively root over those files on the host as well. The fix for all of this is mundane and effective. Do not run as root. The great majority of containerised applications simply do not need to, and the next several sections are about the ways to avoid it.

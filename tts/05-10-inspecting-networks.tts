@@ -1,0 +1,7 @@
+Inspecting networks.
+
+A few commands come up constantly when you are working out how containers are wired together. Listing your networks shows everything that exists. Inspecting a specific network gives you the full j-son, including its subnet, its gateway, and the list of containers attached to it, and with a format directive you can pull out just the map of container to eye-pee. Inspecting a container shows its network settings and which networks it is attached to. And the port command shows a container's published port mappings.
+
+To get a single container's eye-pee on a particular network, you inspect the container with a format directive that drills down through its network settings to that network's address field. It is a small incantation, but it is the fastest way to answer the very common question, what address did this container actually get.
+
+One thing to keep in mind throughout. A container attached to more than one network has more than one eye-pee, one per network. So when you are reasoning about connectivity, always ask which network the traffic is travelling on, because the same container can present a different address on each one.

@@ -1,0 +1,9 @@
+The volume flag short form versus the mount long form.
+
+Docker has two ways to spell a mount, and they mostly do the same thing, so it is worth understanding the trade-off rather than just copying whichever you saw first.
+
+The volume flag is the short, terse form. You write a source, a colon, a destination, and an optional comma-separated list of options like read-only. The source can be a volume name, an absolute host path which makes it a bind mount, or nothing at all which makes it an anonymous volume. It is quick to type and reads fine once you know it.
+
+The mount flag is the long, explicit form. You spell out the type, whether volume, bind, or t-m-p-f-s, then the source, the target, and any options as separate key-value pairs. It is more to type, but there is no ambiguity about what you meant.
+
+That ambiguity is the whole point of the comparison. With the short flag, a name before the colon means a volume, but an absolute path before the colon means a bind mount, so a single stray slash from a typo silently turns one into the other, and you do not notice until your data ends up in the wrong place. The long mount form forces you to say type volume or type bind explicitly, which is why the docs recommend it for new code. In compose files you will see both styles, so use whatever your team has standardised on, and lean toward the explicit mount form for scripts and continuous integration.

@@ -1,0 +1,9 @@
+Host network mode.
+
+The host network mode skips all the bridge machinery entirely. The container gets no namespace of its own, so it sees and binds the host's interfaces directly. Run a web server this way and it is listening on the host's own port eighty, not on a container port at all.
+
+You give up three things in exchange. There is no port mapping, so the publish flag is ignored and you bind directly. There is no isolation, so if two host-network containers both want the same port, the second one fails. And there is no bridge, which means no docker zero and no embedded d-n-s for resolving other containers by name.
+
+What you gain is performance and directness. There is no network-address-translation overhead, which helps very-high-throughput servers like load balancers and packet inspectors. You get raw access to the host's network configuration, which some tools genuinely need. And debugging is simpler, because tools run inside the container see exactly what the host sees. The trade-off is that host mode breaks the isolation promise specifically for the network, so use it sparingly and only when you have a concrete reason.
+
+One platform note. Host mode works properly on linux. On docker desktop, on mac and windows, it is only partially supported, because it shares the virtual machine's network rather than your laptop's. So do not rely on it behaving the same across platforms.

@@ -1,0 +1,7 @@
+Stacks, the compose file in cluster form.
+
+Typing out long service-create commands with fifteen flags each is the swarm equivalent of typing docker run lines instead of using compose. The fix is the same in spirit. A stack is a y-a-m-l file in the compose format, with extra deploy keys, that you deploy to a swarm with a single stack-deploy command.
+
+A realistic stack file looks just like a compose file, with services that name their images, publish ports, join an overlay network, and reference secrets and volumes. The new part is the deploy block inside each service. That is where you put the replica count, the update configuration with its parallelism and delay and failure action, the restart policy, the resource limits, and the placement rules. Everything outside the deploy block is ordinary compose syntax, and the deploy block is precisely the part that compose ignores on a single host but that swarm pays close attention to.
+
+Once written, you deploy the whole stack with one command, and you manage it with companion commands to list its services, list its tasks, and remove it. So a stack gives you the same declarative, version-controlled, one-command experience that compose gave you on a single host, now spread across an entire cluster, with the deploy block carrying all the cluster-specific intent.

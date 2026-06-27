@@ -1,0 +1,11 @@
+Foreground, detached, interactive.
+
+Three flags get combined constantly, and most people learn the combinations by rote without knowing what each one does. Let us pull them apart, because once you understand them separately, the combinations explain themselves.
+
+The detached flag. Without it, docker run attaches your terminal to the container's output and does not return until the container exits, and a control-c sends an interrupt to the container. With the detached flag, the container runs in the background, docker run immediately hands you back the container's I-D, and the output is still captured so you can read it later with docker logs. So you use detached for long-lived services like web servers and databases, and you skip it for one-shot commands where you actually want to watch the output.
+
+The interactive flag keeps standard input open. Without it, the container's input is closed immediately, so any program that tries to read input sees end-of-file and exits. That is fine for a web server, but it breaks a shell. With the interactive flag, input stays open and what you type is piped into the container.
+
+The t-t-y flag allocates a pseudo-terminal. Without it, the container has no terminal, so prompts look strange, line editing does not work, and colours may not appear. With it, docker gives the container a real terminal, and prompts, colours, and line editing all behave normally.
+
+That is why people write the interactive and t-t-y flags together as dash i-t. Whenever you want to drop into a container as if you had ess-ess-h'd in, you use dash i-t, for example to get a shell in an ubuntu container. Without the interactive flag your typing goes nowhere, and without the t-t-y flag the prompt looks broken. You usually do not combine detached with dash i-t, but occasionally you want a background sandbox container that stays alive to exec into later, though running it with a sleep-forever command is honestly clearer.

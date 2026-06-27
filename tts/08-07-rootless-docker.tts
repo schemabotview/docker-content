@@ -1,0 +1,7 @@
+Rootless docker.
+
+User-namespace remapping still leaves the daemon itself running as root. Rootless docker goes a step further and runs the entire daemon, and all of its containers, under your own unprivileged user account. After a one-time setup and starting the user-level service, your shell points at the rootless daemon, and docker behaves as you would expect, except that everything happens as your user. The payoff is that there is no root daemon to compromise at all, so a kernel escape from a container only gives an attacker your own user's privileges on the host, not root.
+
+It does come with trade-offs. Networking is slower by default, because it routes through a userspace proxy. Per-container host networking is unavailable. The privileged flag does not work, which is arguably a feature. Resource limits require the newer control-group version, which most modern distros have. And rootless cannot write host firewall rules, so port publishing goes through that userspace proxy instead.
+
+Where rootless really shines is shared development hosts, sandbox environments, and continuous-integration runners, anywhere you do not want the compromise of a single build step to escalate into compromise of the whole host. In those settings, accepting a bit of networking overhead in exchange for removing the root daemon entirely is usually a very good trade.

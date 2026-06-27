@@ -1,0 +1,7 @@
+Initialising a cluster.
+
+On the machine that will be your first manager, you run a single init command, advertising that machine's address. That one command does a lot. It turns the local daemon into a swarm manager, generates two join tokens, one for adding more managers and one for adding workers, initialises the cluster's replicated state with this node as the leader, creates the default overlay network used for ingress, and prints a ready-to-paste worker-join command.
+
+To grow the cluster, you go to each additional node and paste the appropriate join command. For a worker, you paste the worker-join command directly. For another manager, you re-print the manager token on an existing manager and paste that instead. You can re-print either token later, and you can rotate a token to invalidate the old one and issue a fresh one, which is good hygiene if a token might have leaked.
+
+A couple of operational details matter. The cluster communicates on three ports, one for cluster management, one for gossip, and one for the overlay data plane, and you have to open those between the nodes or the cluster cannot form. And once nodes have joined, listing the nodes shows them all, with a marker indicating which one you are currently issuing commands from. From there, you manage the whole cluster from that single manager, using the same docker client you already know.

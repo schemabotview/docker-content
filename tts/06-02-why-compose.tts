@@ -1,0 +1,9 @@
+Why compose.
+
+Back in notebook three you were typing docker run with seven flags just to launch a single container. Now picture a normal web app, with a web server, a database, a cache, and maybe a worker. That is four containers, four long run commands, a user-defined network to connect them, a couple of named volumes, environment shared between services, a specific startup order, port mappings, and the same flags repeated over and over.
+
+You can do all that with a bash script. Teams have. It is miserable to maintain, and it drifts out of date the moment someone changes a flag by hand.
+
+Docker compose is the answer. One y-a-m-l file describes the whole stack, and one command brings everything up, while another tears it all down. The file is checked into git, so a teammate clones the repo and runs it, and gets exactly the same stack you have. What compose is not is an orchestrator across many machines, which is notebook nine. It is a local-development and single-host deployment tool that runs many containers on one daemon, declaratively.
+
+One quick note on versions, because the naming confuses people. The old standalone tool, spelled docker-hyphen-compose, is end of life. The modern one is the docker compose subcommand, spelled with a space, shipped as a plugin to the docker client. Both read the same y-a-m-l, but the modern one is faster and supports newer features, so use it and do not look back.

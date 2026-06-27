@@ -1,0 +1,9 @@
+Snapshotting, docker commit.
+
+Docker commit takes the current filesystem of a container and turns it into a new image. So you could start an interactive ubuntu container, install python and an editor inside it, exit, and commit the result into a new image that ships with those tools already installed. It works, and the mechanics are simple.
+
+But you should almost never use it, and it is worth understanding why. The result is opaque. There is no record of how the image was built, no dockerfile to review, no diff against the base. It is the save-game of docker images, convenient in the moment, but you have lost the recipe entirely, and nobody, including future you, can see how it came to be.
+
+There are a couple of legitimate uses. One is exploration, where you are poking at an image and want to save your state before you destroy the container. Another is capturing a forensic snapshot of a crashed container so you can debug it later.
+
+What commit is not for is anything you will need to rebuild, anything you will share with a teammate, or anything that goes to a registry for production. For all of those, write a dockerfile. The dockerfile is the reproducible, reviewable recipe, and choosing it over commit is one of those small disciplines that future-you and your teammates will be grateful for.

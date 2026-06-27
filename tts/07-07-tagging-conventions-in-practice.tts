@@ -1,0 +1,7 @@
+Tagging conventions in practice.
+
+Notebook two introduced the individual tagging patterns. In a real organisation you see them combined into a versioning scheme that runs across build and deploy. At build time, continuous integration tags the freshly built image with the git commit hash, and, if the commit is a tagged release, with the semantic version, and with the branch channel like main or release-candidate. It then pushes all of them, and because they all point at the same manifest digest, the cost is a single upload for the whole set.
+
+At deploy time, the deployment manifest references the image by digest for strict reproducibility, or by an immutable semantic version if your organisation enforces tag immutability. Either way, the deployed artifact is pinned, not floating.
+
+This is the right moment to settle the is-latest-ever-okay question. For images you publish, almost never, because latest is a moving target and downstream users end up with random versions. For images you consume locally and casually, it is fine, since it just saves typing. But for production deploys, never, because even if you personally never re-push latest, a pull six months from now will not necessarily return the image you actually tested with. A useful safeguard here is tag immutability, which some registries can enforce by rejecting any re-push of an existing tag. Turn that on for your release tags so that a mistake cannot silently rewrite history.

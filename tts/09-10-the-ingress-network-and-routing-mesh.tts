@@ -1,0 +1,7 @@
+The ingress network and routing mesh.
+
+This is a killer swarm feature, and it hides behind an ordinary-looking publish flag. When a service publishes a port, swarm puts that port on every node in the cluster, even nodes that are not running any replica of the service. So a request hitting any node on that port reaches a healthy replica somewhere, even if the node it landed on hosts no replica at all.
+
+The mechanism is a chain of four steps. A node receives the packet on the published port. The kernel's load balancer, configured by swarm, picks a healthy task address from anywhere in the cluster. The packet is routed over the encrypted ingress overlay to that task's node. And that node delivers it to the local container. Picture requests arriving at three different nodes and each being forwarded, transparently, to whichever node actually has a healthy task, sometimes local, sometimes remote. The practical upshot is wonderful. You can put any node's address behind your d-n-s or load balancer and it just works, because the cluster handles all the internal routing. This is the routing mesh, and it is the default behaviour for publishing a port in swarm.
+
+There is an alternative when you do not want it. If you want a port published only on the nodes actually running the task, you use host-mode publishing, which skips the mesh entirely. That is useful when an external load balancer is already smart enough to health-check and target the right nodes itself, so you do not need swarm to spread the port everywhere.

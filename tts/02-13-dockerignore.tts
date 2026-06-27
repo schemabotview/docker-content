@@ -1,0 +1,7 @@
+The docker-ignore file.
+
+A docker-ignore file sits at the root of your build context and tells the daemon which files to leave out of the tarball it ships. The syntax is git-ignore style, one pattern per line, an exclamation mark to negate a pattern, and a hash for comments. A typical one excludes the dot git directory, dependency folders like node-modules, python byte-code caches, local environment files, build output directories, and editor or operating-system noise.
+
+There are three reasons this file earns its place in every project. The first is speed. A smaller context means less to upload to the daemon, so builds start faster. The second is better cache hits. A copy of everything into the image is invalidated by any change in the context, so excluding noise like editor files and local environment files means your layer cache survives changes that have nothing to do with the build.
+
+The third reason is security, and it is the most important. The docker-ignore file stops you from accidentally baking secrets, ess-ess-h keys, or your dot git history into the image. The number of public images that have leaked environment files this way is genuinely embarrassing, and the docker-ignore file is your first line of defence. Treat it as part of every dockerfile, not as an optional extra.

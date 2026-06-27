@@ -1,0 +1,7 @@
+The full anatomy of docker run.
+
+Docker run is the busiest command in all of docker, so it is worth slowing down and seeing its whole shape. You type docker run, then your options, then the image with an optional tag or digest, then an optional command to override the default, then any arguments to that command.
+
+The real skill is not memorising flags, it is grouping them into mental buckets so you reach for the right one. There is a lifecycle and attachment bucket, with the detached, interactive, t-t-y, remove, name, and hostname flags. A networking bucket, with the publish, network, and d-n-s flags, which is notebook five. A storage bucket, with the volume, mount, and read-only flags, which is notebook four. An environment bucket, with the environment, env-file, working-directory, and user flags. A resource-limits bucket, with the memory, see-pee-yous, and process-I-D-limit flags. A security bucket, with the capability and security-option flags, which is notebook eight. And a restart-and-init bucket.
+
+We touched networking and storage flags in passing in notebook one, and they each get a whole notebook of their own later. This notebook is the deep dive on the rest, the lifecycle, environment, resource, and restart buckets. By the end you should be able to launch any container with the right flags, debug a stuck one, and explain every column in a container listing.

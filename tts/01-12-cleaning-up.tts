@@ -1,0 +1,9 @@
+Cleaning up.
+
+A few hours into using docker, you will look up and find dozens of exited containers and a pile of old images sitting on your disk. This is normal, because docker keeps things around on purpose, and it is worth knowing how to tidy up before they eat real space.
+
+There are two styles of cleanup. Targeted, where you name exactly what to remove, using docker remove for a single container or docker remove-image for a single image. And bulk, where docker system prune sweeps away all stopped containers, all dangling images, which are the untagged orphans left over from rebuilds, and all unused networks in one command.
+
+The bulk prune comes in three levels of aggression. Plain docker system prune is the relatively safe one. Adding the all flag also removes every unused image, not just the dangling ones, which frees a lot more space. And adding the volumes flag on top of that also wipes unused volumes. Be careful with that last one, because volumes are where your data lives, and once it is gone it is gone.
+
+One more command worth knowing. Docker system d-f is like the disk-free command, but for docker. It shows you how much space is being used by images, containers, and volumes, so you can see what is worth cleaning before you reach for prune.

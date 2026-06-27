@@ -1,0 +1,11 @@
+Naming, hostname, and the remove flag.
+
+Two flags control how a container is identified, and one controls whether it sticks around after it exits.
+
+The name flag gives the container a stable name you will use to refer to it. If you do not set one, docker invents a playful two-word name for you. Auto-generated names are fine for throwaways, but you should name anything you will talk to more than once. Names are unique on a host, so you cannot have two containers named web even if one of them is stopped. You either remove the old one first or pick a different name.
+
+The hostname flag sets the hostname inside the container, what the hostname command returns from within it. By default that is the container's short I-D. It is useful for services that put their hostname into their logs or that register themselves somewhere by name.
+
+The remove-on-exit flag automatically deletes the container when it exits. Without it, every docker run leaves an exited container lying around until you remove it or prune. With it, the container is cleaned up the moment it stops. So you use it for one-shot commands, where you do not want a graveyard of dead containers cluttering your listings, and you skip it for production services, where you might want the exit code and final logs of a crashed container for debugging.
+
+One trade-off to remember. The remove-on-exit flag is incompatible with the restart flag, other than the no-restart policy. A container cannot be both auto-removed and auto-restarted, because those two ideas directly contradict each other.

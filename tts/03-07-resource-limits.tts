@@ -1,0 +1,9 @@
+Resource limits.
+
+By default a container can consume all of the host's memory and see-pee-you. That is almost never what you want, because one runaway container can starve everything else on the box. Docker exposes the kernel's control-group limits through a handful of run flags.
+
+Start with memory. The memory flag sets a hard cap on ram, and if the container exceeds it the kernel's out-of-memory killer kills the process and the container exits with code one-three-seven. The memory-swap flag sets the total of memory plus swap, and setting it equal to the memory limit disables swap entirely for predictable behaviour. There is also a soft memory reservation that the kernel tries to pull the container back to under pressure without killing it. And there is a flag to disable the out-of-memory killer for a container, which you should not use, because it just pushes the problem onto the rest of the host.
+
+For see-pee-you, the modern and easy flag simply asks for a number of see-pee-yous, like one and a half, implemented underneath with the kernel's bandwidth control. There is also a relative shares flag that only matters when the see-pee-you is actually contended, where a container with half the shares of another gets half the time when both want to run. And there is a flag to pin a container to specific cores, which helps low-latency workloads that do not want to migrate between processors.
+
+A couple of other limits are worth knowing. A process-I-D limit caps how many processes the container can have, which stops a fork bomb in its tracks. And a u-limit flag sets kernel resource limits like the number of open file descriptors. Finally, you can always read these limits back with docker inspect, remembering that memory is reported in bytes and see-pee-you allowance is reported in billionths of a see-pee-you.

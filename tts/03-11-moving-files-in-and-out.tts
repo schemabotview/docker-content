@@ -1,0 +1,9 @@
+Moving files in and out.
+
+Docker copy moves files or directories between a container and the host, and it works on both running and stopped containers. You can copy a config file from the host into the container, pull a log file out of the container onto the host, or move a whole directory in either direction.
+
+A few details are worth keeping straight. The container side of the path is always absolute, while the host side can be relative. If the destination does not exist it is created, and if it exists as a directory the source is placed inside it. Docker copy does not follow symbolic links by default unless you ask it to. And ownership and permissions are preserved from the source.
+
+The most important point is what docker copy is not for. It is not how you do persistent storage. Data that should survive the container being removed belongs in a volume, which is notebook four. Docker copy is for ad-hoc operations, pulling out a log to look at it, or dropping in a config to test something quickly.
+
+There is also a lower-level pattern you will see in continuous integration, where people stream a tar archive through docker exec's standard input or standard output to move files in bulk. That piped tar approach is essentially what docker copy does internally, so it is the same idea expressed by hand.

@@ -1,0 +1,7 @@
+Image references revisited.
+
+Recall the reference grammar from notebook two, an optional registry host and port, an optional namespace, the repository, an optional tag, and an optional digest. Now we can fill in what each piece actually controls.
+
+The registry host and port default to docker hub, and they decide which registry's a-p-i to hit. The namespace defaults to library on docker hub, and it decides which user or organisation the image belongs to. The repository is required and is the image's name within that namespace. The tag defaults to latest, and it decides which manifest the registry points at right now, which makes it mutable. And the digest has no default. It names a specific manifest, it is immutable, and if both a tag and a digest are present, the digest wins.
+
+The most important real-world pattern combines a tag and a digest together. The tag is there for human readability and the digest is there for the byte-exact guarantee. This is exactly what you see in deployment manifests committed to git, where the image is written with both a friendly version and a pinned digest. The cluster pulls strictly by the digest, so the running bytes are reproducible, while the tag is there purely so an engineer reading the manifest can tell at a glance which version it is. That combination gives you both readability and reproducibility at once.

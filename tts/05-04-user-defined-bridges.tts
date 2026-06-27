@@ -1,0 +1,7 @@
+User-defined bridges, the standard choice.
+
+Creating a user-defined bridge takes a single command, docker network create with a name. That one step buys you everything the default bridge lacks. You get embedded d-n-s, so containers resolve each other by name. You get real isolation, because only containers you explicitly attach can join. You can attach and detach containers at runtime. And the network's m-t-u, gateway, and subnet are all configurable per network.
+
+The standard pattern is one user-defined bridge per application unit. Think of a web service together with its database and its cache as one unit, and attach all of those containers to a single network you created for them. So you create the network, start the database on it, then start the a-p-i on the same network and tell the a-p-i where the database is by its container name.
+
+The payoff is how clean the wiring becomes. Inside the a-p-i container, the hostname of the database container resolves straight to that container's eye-pee, with no port mapping needed between them at all, because they share the bridge and talk directly on their container ports. Port publishing only enters the picture for traffic coming in from the outside world, which is the next topic.

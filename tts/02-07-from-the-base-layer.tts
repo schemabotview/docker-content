@@ -1,0 +1,7 @@
+From, the base layer.
+
+Every dockerfile starts with a from instruction. It picks the base image that everything else is layered on top of, for example from python tag three point twelve slim. Choosing this base well is one of the highest-leverage decisions in the whole file, because it sets your size, your security surface, and your compatibility from the very first line.
+
+A few rules of thumb. Official images, the ones with no namespace, just python, node, or go-lang, are maintained by docker or the language teams, and they are the sensible default. Slim variants strip out everything not strictly needed to run the language, so they pull faster and have fewer vulnerabilities to patch. Alpine variants go further, using alpine linux with mus-l libc instead of debian, making the smallest practical images, but they can trip up binary python wheels because of the mus-l versus g-libc difference, so test before you commit. And scratch is the literal empty image, zero bytes, no shell, no libc, useful as a base for a statically linked go or rust binary.
+
+Two more habits worth forming. Always pin the tag. A floating tag like three point twelve is fine while developing, but a fully pinned one like three point twelve point seven slim bookworm gives you repeatable builds, and some teams pin all the way down to a digest. And remember that a dockerfile can have more than one from line. When it does, you have a multi-stage build, which we cover later in this same notebook.

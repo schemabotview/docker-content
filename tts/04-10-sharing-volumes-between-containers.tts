@@ -1,0 +1,9 @@
+Sharing volumes between containers.
+
+There are two ways to make multiple containers see the same data, one modern and one legacy.
+
+The modern way is simply to mount the same volume into each container. You create a volume once, then mount it into a producer container at one path and into a consumer container at another, and the volume is the single source of truth that each container reads and writes wherever it likes. This is the standard, recommended approach, and it is as straightforward as it sounds.
+
+The legacy way is the volumes-from flag, which copies all of one container's mounts into a new container at the same paths. This came out of the old data-container pattern, where people would create a stopped container whose only job was to own a volume. Today the volume is a first-class object in its own right, so volumes-from is mostly a relic. You should recognise it in older compose and swarm setups, but not reach for it in new code.
+
+One serious caution applies to both approaches. Two containers writing to the same volume at the same time can corrupt the data unless the application itself coordinates. Postgres will refuse to let two instances point at the same data directory, and s-q-lite has well-known problems with multiple writers. Volumes add no locking of their own. They are just shared bytes, and it is up to the application to handle concurrency safely.

@@ -1,0 +1,7 @@
+Logging drivers.
+
+The default logging driver writes each container's standard output and standard error to a j-son file under docker's data directory, and that is where docker logs reads from. There are many other drivers, and the key practical distinction is whether docker logs still works with each. It works with the default j-son file, with a compressed local-file variant, and with the system journal. It does not work with the ones that ship logs off the machine entirely, like sys-log, the various cloud logging services, and the collectors used in larger pipelines, because once the logs leave, you read them from their destination instead.
+
+You can choose a logging driver at three levels. You set a daemon-wide default in the daemon configuration, you override it per container with a log-driver flag, or you set it per service in a compose logging block. That layering lets you pick a sensible default and then deviate where a particular workload needs something different.
+
+The common shape in real life is to keep the default j-son file with rotation on development hosts, where docker logs is convenient, and to switch to a centralised driver in production, where logs need to flow into a shared system. One gotcha to remember. If you change the daemon's default driver after containers already exist, those existing containers do not migrate. Only newly created containers use the new driver, so a driver change is really a going-forward decision, not a retroactive one.

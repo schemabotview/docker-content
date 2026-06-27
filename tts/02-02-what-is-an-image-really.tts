@@ -1,0 +1,11 @@
+What is an image, really.
+
+In notebook one we said an image is a frozen, read-only template, a snapshot of a filesystem plus a little metadata. That was true, and now we can be more precise about what is actually inside.
+
+A docker image is two things bundled together. The first is an ordered stack of filesystem layers, where each layer is a tarball of changes, additions, modifications, and deletions, relative to the layer beneath it. The bottom layer might be a whole debian root filesystem, the next might be install python, the next might be copy your app in. The second is a j-son configuration blob that describes how to run the image, the default command, the entry-point, the working directory, environment variables, exposed ports, and the user to run as.
+
+These two pieces are tied together by a manifest, which lists the digest of each layer and the digest of the configuration. The manifest itself is then hashed with s-h-a two-five-six, and that hash is the image's true identity. When you say n-ginx tag one point twenty-seven point zero, you are really pointing at a digest. The tag is a mutable nickname. The digest is the immutable truth underneath it.
+
+This content-addressable design is what makes images so cacheable. Two images that share a base layer share the exact same bytes on disk, and when you pull two images that overlap, the shared layers download only once.
+
+It is just as useful to be clear about what an image is not. It is not a tarball of a complete operating system. There is no init system inside it, and no kernel. When you run it, your host kernel starts a process inside the union of those file layers. It is not an executable either. It is data, and you need the docker engine, or some other open container initiative runtime, to interpret it. And it does not boot. There is no kernel boot and no system-d. The host kernel simply runs the configured command directly.

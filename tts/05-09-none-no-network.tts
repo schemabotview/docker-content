@@ -1,0 +1,7 @@
+None, no network.
+
+The none network gives a container a namespace containing only its loopback interface. There is no ethernet device, no d-n-s, and no outbound connectivity whatsoever. Check the container's addresses and all you find is loopback.
+
+This is exactly what you want for a few specific cases. It suits a sandboxed batch job that should never phone home, where cutting off the network entirely is a feature rather than a limitation. And it suits forensic analysis of an untrusted image, where you want to run it but give it no way to reach anything.
+
+One useful detail keeps it from being a dead end. You can later connect a network to a none container at runtime to add interfaces, so choosing none at startup does not have to be permanent for the whole life of the container. It is a starting posture of complete isolation that you can selectively relax if and when you decide to.

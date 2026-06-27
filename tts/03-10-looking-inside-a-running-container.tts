@@ -1,0 +1,9 @@
+Looking inside a running container.
+
+Your container is running and you want to see what it is doing. There are six tools, and knowing which to reach for is most of the skill.
+
+Docker exec is the one you will use most. It runs a command inside the container, dropping you or a script into it without touching the main process. You can get an interactive shell, run a one-shot command, run as a different user, or pass extra environment. The exec'd process is a sibling of the main process, not a child, so when you exit, the container keeps running.
+
+Docker attach is different. It connects your terminal to the container's existing main process, process one, rather than spawning anything new. That means a control-c sends an interrupt to process one and usually kills the container, so to leave without killing it you use the detach key sequence or disable signal proxying. Use attach to watch the live output of the main process, and use exec for almost everything else.
+
+The other four are read-only views. Docker inspect dumps the full j-son state of the container, and with a format template you can pull out a single field like its status or its eye-pee address. Docker top lists the processes running inside the container. Docker stats shows live resource usage, the see-pee-you, memory, network, and disk figures, updating in real time. And docker diff shows which files have changed in the writable layer relative to the image, which is a great way to spot an app writing to its own filesystem when it should be using a volume.

@@ -1,0 +1,9 @@
+Your first container.
+
+The docker version of hello world is a single command, docker run hello world. Run it, and you get a short burst of output. That output is dense, so let us read it as a sequence, because every container you ever start follows this same path.
+
+First, the daemon looks in your local image cache for an image called hello-world with the tag latest. On a fresh machine it is not there. So next, the daemon reaches out to docker hub, the default registry, and downloads it. Official images like this one live in a namespace called library. The image now sits in your local cache, so the next time you run the same command that download step is skipped entirely. Finally, the daemon creates a container from the image, starts it, the container prints its greeting, and then it exits.
+
+So docker run hello-world is really shorthand for four steps. Pull the image if it is missing, create a container, start it, stream its output, and let it exit. Every docker run you ever type is some variation on those four steps.
+
+Now, the container exited, but it is not gone. Docker keeps stopped containers around so you can inspect or restart them. Two commands prove it. Docker p-s lists running containers, and right after hello-world exits this shows nothing. Docker p-s with the all flag lists every container including stopped ones, and there you will find your hello-world container with a status of exited. Meanwhile docker images lists your local images, and hello-world is now in that list. We will learn to tidy all of this away at the end of the notebook.

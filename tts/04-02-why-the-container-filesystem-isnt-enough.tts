@@ -1,0 +1,7 @@
+Why the container filesystem is not enough.
+
+Remember the layer stack from notebook two. The container's writable layer sits on top of the read-only image layers, and when the container's process writes to its own filesystem, those writes land in that writable layer. That works, but it has three real problems, and together they are the reason volumes exist.
+
+The first problem is that it is ephemeral. Removing the container deletes the writable layer along with it, so if a database was writing into its own filesystem, the database simply disappears. The second is that it is not shareable. Two containers cannot see each other's writable layers, so you cannot easily have one container reading another's data. The third is that it is slow for heavy writes, because the union filesystem does a copy-up on first write, which is fine for the occasional change but expensive for write-heavy workloads like databases.
+
+The fix is the same idea in every case. You take a path inside the container and mount something else there, something that lives outside the writable layer and survives the container's lifecycle. That something is one of three kinds of mount, which is exactly what the rest of this notebook is about.

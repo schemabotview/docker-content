@@ -1,0 +1,7 @@
+Image manifests and digests.
+
+When you push, the registry stores blobs, the layers and the configuration, and it stores manifests, which are small j-son documents pointing at those blobs. The manifest is the source of truth for what an image actually is. A single-platform manifest is a j-son object naming a schema version, a media type, the configuration blob with its digest and size, and an array of layers, each with the same fields.
+
+Here is the key idea. That j-son, exactly as it is serialised, is the canonical representation of the image. Hash those bytes with s-h-a two-five-six and you get the image's digest. Change anything at all, the order of a layer, a single byte in the configuration, and the digest changes. That is precisely why digest equals identity. An image cannot be tampered with without becoming a different image, because any change produces a different hash.
+
+You can inspect an image's manifest without pulling it. The build-x image-tools command shows the manifest for a reference, and a raw flag prints the actual j-son. On older docker versions, or when you want to introspect a registry without pulling anything at all, a dedicated tool for that purpose is the standard way to read manifests straight from the registry. Either way, you are looking at the same thing, the small j-son document whose hash is the image's unforgeable name.

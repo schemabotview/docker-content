@@ -1,0 +1,7 @@
+No-new-privileges.
+
+This is a subtle but valuable linux feature. Normally, if a binary carries the set-user-I-D bit, executing it elevates the running process to the file's owner, which is how tools like sudo work. The no-new-privileges setting tells the kernel to ignore those set-user-I-D bits for this process tree, so the process can never gain privileges beyond what it started with. You enable it with a security option at run time, or by setting it in a compose security-option list.
+
+What this breaks is exactly the set of set-user-I-D utilities, sudo, mount, and similar. The thing is, most application containers never need those utilities, so breaking them is a positive, not a loss. An attacker who lands in your container cannot suddenly become root through a set-user-I-D binary, because the kernel refuses to honour the elevation at all.
+
+The real power comes from combining it with the earlier defences. A hardened service runs as a non-root user, with a read-only root filesystem, with all capabilities dropped and only the needed ones added back, and with no-new-privileges turned on. Each of those closes a different escalation path, and together they leave an intruder with very little room to move. That combination is the baseline a security-conscious team applies to every container by default.

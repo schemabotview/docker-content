@@ -1,0 +1,7 @@
+The service lifecycle.
+
+The swarm commands mirror the single-container ones, but at the service level. You create a service with most of the same flags you know from docker run, plus swarm-specific ones. You list services to see desired versus running replicas. You list a service's tasks to see their placement and status. You inspect a service for its full definition. You stream aggregated logs from every task in the service at once. You update a service to change its image, replicas, environment, or networks, which triggers a rolling update. There is a scale shortcut for changing the replica count, a rollback command to revert the last update, and a remove command to delete the service and all its tasks.
+
+Two conceptual shifts from single-host docker are worth internalising. The first is that you do not stop or start a service. To stop it, you scale it to zero, and it comes back when you scale up again, and to get rid of it entirely you remove it. The second is that you do not manually restart a container. If a task dies, the orchestrator replaces it for you, so manual intervention is reserved for code or configuration changes, not for kicking the tires.
+
+This is the heart of the declarative model. You describe the state you want, and swarm continuously makes reality match it. Most of your day-to-day work becomes adjusting that desired state, the image, the replica count, the configuration, rather than babysitting individual containers, which is exactly the shift orchestration is meant to give you.

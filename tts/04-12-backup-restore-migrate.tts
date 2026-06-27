@@ -1,0 +1,9 @@
+Backup, restore, migrate.
+
+Volumes are owned by the daemon, so you cannot simply copy them with a recursive file copy. They are not always in a stable location, and on docker desktop they live inside the virtual machine entirely. The standard pattern for working with them is a helper container.
+
+To back a volume up, you run a short-lived helper container that mounts the volume read-only at one path and bind-mounts your current host directory at another, and then tars the volume's contents into a compressed archive on the host. The result is an ordinary tarball sitting in your working directory. To restore, you reverse it. You create a fresh volume, run a helper container that mounts the new volume and your backup directory, and untar the archive into the volume. After that, a real container mounting the restored volume picks up right where the old one left off.
+
+Migrating between hosts is just those two steps with a copy in the middle. You back up to a tar on the first host, copy the tar over to the second host, and restore it there. The same dance moves a volume between docker desktop and a linux server.
+
+One important caveat for databases. Do not tar the live data files of a running database, because you can catch them mid-write and corrupt the backup. Use the database's own dump tool to produce a consistent export instead. Tarring the volume directly is fine for a stopped database, or for data that is not a database at all.

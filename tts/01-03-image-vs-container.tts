@@ -1,0 +1,11 @@
+Image versus container.
+
+These are the two words you will say most often, and they are not the same thing. Getting the distinction crisp now saves a lot of confusion later.
+
+An image is a frozen, read-only template. It is a snapshot of a filesystem plus a small amount of metadata, things like which command to run, which user to run as, and which environment variables to set. An image does nothing on its own. It just sits on disk as a blueprint.
+
+A container is a running, or stopped, instance made from that image. When you start it, docker stacks a thin writable layer on top of the image's read-only layers, and that writable layer is where the container's changes go. You can create many containers from one image, and each gets its own separate writable layer.
+
+A few analogies lock this in. In object-oriented programming, the image is the class and the container is the object you create from it. In cooking, the image is the recipe and the container is the dish you actually cook. In everyday software, the image is the installer and the container is the installed, running program.
+
+So the verbs line up cleanly. You build or pull an image. You run an image to create a container. You stop, start, and remove containers. Notebook two goes deep on images, and notebook three goes deep on containers. For now, just keep straight which word means the template and which means the running thing.

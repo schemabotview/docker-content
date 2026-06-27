@@ -1,0 +1,7 @@
+User-namespace remapping.
+
+By default, root inside a container is the very same user-I-D zero as root on the host, because they share the user namespace. User-namespace remapping changes that. The daemon maps the container's user-I-D zero to some high, unprivileged user-I-D on the host, so from the host's point of view the container's root is just a normal unprivileged user. A breakout through a kernel bug then lands the attacker as that unprivileged user rather than as host root, which is a meaningful downgrade of the blast radius.
+
+You enable it in the daemon configuration by turning the remap setting on, which creates a dedicated host user with a range of sub-user-I-Ds and sub-group-I-Ds and remaps all containers into that range. There are real trade-offs, though. All containers share the same remap range, so if you need per-container isolation you have to move to rootless docker or a stronger boundary. Bind mounts get fiddly, because host files owned by the remapped range look like root inside the container and you have to adjust ownership accordingly. And some features are simply incompatible with it, like the privileged flag and sharing certain host namespaces.
+
+The practical guidance is to leave it off for development and continuous integration, where the friction is not worth it, and to turn it on for production servers that run containers from sources you do not fully trust, where the reduced blast radius genuinely matters.

@@ -1,0 +1,9 @@
+Anatomy of a docker command.
+
+Modern docker organises its commands in a very regular way, by object and then verb. You type docker, then the object you are acting on, like container, image, volume, or network, then the verb, like list, run, pull, or create, then any flags, and finally any arguments. Once you see this pattern, the whole command-line interface stops feeling like a pile of memorised commands and starts feeling like a grammar.
+
+A few examples make it concrete. Docker container list lists your containers. Docker container run n-ginx starts a container from the n-ginx image. Docker image pull ubuntu tag twenty-four point oh-four downloads an image. Docker volume create data makes a volume. And docker network list shows your networks. The full set of objects includes container, image, volume, network, system, builder, compose, context, secret, service, stack, and swarm, and you will meet each one as the course goes on.
+
+Now, for the most common objects, docker also keeps short top-level aliases, the older spellings you will see in most blog posts. Docker container run is just docker run. Docker container list is docker p-s. Docker container stop is docker stop. Docker image list is docker images. Docker image pull is docker pull. And docker image build is docker build. They do exactly the same thing as the long forms.
+
+Use whichever feels natural. The long form is more discoverable, because docker container help lists everything you can do to a container. The short form is faster to type. We will mix both freely in this course, so get comfortable reading either.

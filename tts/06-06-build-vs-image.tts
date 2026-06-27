@@ -1,0 +1,7 @@
+Build versus image.
+
+Every service has to say what to run, and it does that with one of two keys. The image key runs a pre-built image, pulled from a registry if it is not already local, which is what you use for off-the-shelf components like a database or a cache. The build key, instead, builds an image from a dockerfile in your project. The shortest form just points at the current directory, meaning the build context is here and the dockerfile is the default one, and the longer form lets you set the context, the dockerfile path, build arguments, and a target stage for a multi-stage build.
+
+You can actually specify both build and image together. When you do, compose builds the image and then tags it with the name you gave, and that tag is what gets pushed if you push the project. This is the common pattern for an app you build locally but also publish to a registry.
+
+One behaviour to keep in mind. Bringing the stack up will build any image that does not already exist locally, but it will not rebuild one that does. So when you have changed your source and want a fresh build, you either bring it up with the build flag or run an explicit build first. Forgetting this is a classic reason people stare at old code running in a container that they were sure they had just changed.

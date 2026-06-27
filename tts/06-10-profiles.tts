@@ -1,0 +1,7 @@
+Profiles, opt-in services.
+
+Sometimes a service should only run in particular situations, a debug sidecar, a seed-data container, a load tester. Profiles let you tag those services so they are skipped unless you explicitly turn their profile on.
+
+The rule is simple. A service with no profiles always runs. A service that lists one or more profiles runs only when at least one of its profiles is enabled. So a plain bring-up starts just the always-on services, and you enable a profile to pull in the extra ones, and you can enable several profiles at once to bring in several groups together.
+
+This is genuinely useful for stacks where a few services are development-only or test-only and you do not want them cluttering the default bring-up. The everyday experience stays clean, with only the core services running, and the optional pieces are there the moment you ask for them by name. It keeps one compose file serving many situations instead of forcing you to maintain separate files for each.

@@ -1,0 +1,7 @@
+Run, execute at build time.
+
+The run instruction takes a command, executes it inside a temporary container based on the current layer, and then commits the result as a new layer. This is how you install packages, compile code, and generate files while the image is being built. A canonical example is updating the package index, installing curl and certificates, and cleaning up the package lists, all in one go.
+
+There are two syntaxes, and the difference matters. Shell form runs your command through slash bin slash s-h dash c, so you get shell features, the and-and operator, pipes, redirection, and variable expansion. Exec form, written as a j-son array, is run directly with no shell at all, which means no and-and and no variable expansion, but it is required when the image has no shell, like scratch or distroless. Shell form is the default and what you will see the vast majority of the time with run.
+
+Now, why do you see the and-and operator chained everywhere in dockerfiles. It comes down to layers. Each run makes a new layer, so a separate update line and install line produce two layers, and worse, the cached update can go stale so the install pulls from an out-of-date package index. The canonical pattern is to chain update, then install with no recommended extras, then remove the package list cache, all inside a single run. That gives you one layer, a fresh index, and a cleaned-up cache. The same trick applies to pip installing with no cache directory, and to installing node packages and then cleaning the cache.

@@ -1,0 +1,7 @@
+Overlay, multi-host networks, the preview.
+
+Everything up to this point has been single-host networking, with all the containers living on one docker daemon. The moment you have two or more hosts, and you want a container on one machine to reach a container on another as if they shared a local-area network, you need an overlay network.
+
+An overlay works by tunnelling. Each packet that crosses between hosts is wrapped inside an ordinary datagram, sent across the physical network between the machines, and unwrapped on arrival. The hosts in the cluster gossip among themselves about which container lives where, so their routing stays in sync and a container can find a peer regardless of which machine it is actually on.
+
+You can only create overlay networks inside a swarm cluster, or in a special attachable mode for standalone use. Notebook nine covers swarm and overlay networks together, end to end, so this is just the preview. For now, the thing to hold onto is simple. Overlay is how swarm services on different machines talk to each other, and if you are not running a swarm, you will not reach for it.

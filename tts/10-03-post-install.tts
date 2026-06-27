@@ -1,0 +1,7 @@
+Post-install.
+
+A fresh install needs three or four small adjustments before it is pleasant to use. The first is running docker without sudo. By default the docker socket is owned by root and the docker group, so to talk to it without sudo you add your user to the docker group and re-evaluate your group membership, after which the docker commands work directly. There is an important security caveat here, though. The docker group is effectively root on the host, because anyone in it can mount the host's root filesystem into a container and do anything, so on shared machines you should prefer rootless docker instead.
+
+The second adjustment is enabling docker on boot, so the daemon starts automatically when the machine comes up, and optionally starting it right away. The third is simply verifying the install, checking that the client and server versions both appear, glancing at the daemon's reported configuration, and running the hello-world image as one full end-to-end test.
+
+It also helps to know where docker keeps its things. By default everything lives under one directory in slash var slash lib, with subdirectories for the image and container layers, the named volumes, and per-container metadata and logs. The daemon's own configuration file lives under slash e-t-c slash docker, and the service unit that controls the daemon lives with the other system services. Knowing those three locations, the data directory, the configuration file, and the service unit, covers most of what you reach for when configuring or troubleshooting an install.

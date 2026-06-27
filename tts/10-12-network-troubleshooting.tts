@@ -1,0 +1,7 @@
+Network troubleshooting.
+
+When packets are not flowing, there is a universal docker network debug image, commonly called net-shoot, that ships with all the standard tools, packet capture, d-n-s lookup, port scanning, route inspection, and more, in one place. The technique is to attach it to the same network as the service you are debugging and then poke from there, pinging a service by name, resolving its name, making a verbose request to it, and capturing packets on a port. Because it sits on the same network as the real containers, it sees exactly what they see.
+
+A handful of commands inside that debug container cover most cases. You list the interfaces and addresses to see what the container actually has. You print the routing table. You resolve a name to confirm d-n-s is working through the container's own resolver. You make a verbose request to see the h-t-t-p, t-l-s, and timing detail. And you capture packets with a port filter to see whether traffic is even arriving. Those few tools, run from the right network, answer most connectivity questions.
+
+On the host side, you inspect the daemon's firewall rules. The network-address-translation rules are where port publishing lives, and there is a dedicated user chain that exists as a hook for your own custom rules. These are exactly what the daemon manages on your behalf, and the most common finding is simple, if a published port is unreachable, the absence of its translation rule is the cause, which points you straight at how the port was published rather than at the app itself.

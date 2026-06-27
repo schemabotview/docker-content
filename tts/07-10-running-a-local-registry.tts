@@ -1,0 +1,7 @@
+Running a local registry.
+
+For testing, for an air-gapped network, or as a building block for a private registry, the open-source reference registry image runs a fully functional distribution server in a single container. You start it on a port, tag an image with that local-host address and port, push it, and then pull it from anywhere that can reach the host. That is a working registry in essentially two commands, which is genuinely how quick it is to stand one up.
+
+A couple of things turn that toy into something usable. The first is persistence. Without a volume, the blobs vanish when the container dies, so you add storage by mounting a volume at the registry's data directory. The second is security. By default the registry speaks plain h-t-t-p, which is fine for local-host but not for anything beyond it, so for real use you put it behind a t-l-s-terminating proxy and configure authentication, and the image's documentation walks through the environment variables for that.
+
+For production, though, most teams reach for harbor instead of hand-rolling all of that. Harbor wraps the same reference registry with a user interface, role-based access control, replication between registries, and built-in image scanning. It is the same underlying protocol and the same digests, just with a much richer front end, so you get the convenience without giving up any of the standards.

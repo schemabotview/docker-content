@@ -1,0 +1,7 @@
+Read-only root filesystem.
+
+Most applications do not need to write to most of their filesystem at runtime. They write to a few specific places, logs, caches, uploads, and nothing else. Marking the rest read-only blocks a whole class of post-compromise behaviour, like dropping a web-shell into the container or modifying its binaries. It is one of the highest-leverage hardening moves available, a few minutes of audit work in exchange for a much smaller attack surface.
+
+The way you do it is to run the container with the read-only flag, which freezes the entire root filesystem, and then carve out exactly the writable spots you need. You add small in-memory mounts for the handful of paths that processes insist on writing to, like the temp directory and the runtime directory, and you mount a real volume for the data you actually want to keep, like the logs. In compose, this is the same idea expressed as a read-only flag, a list of temporary in-memory mounts, and a volume for the persistent paths.
+
+So the pattern is, lock everything down by default, then open only the specific writable paths the application genuinely requires. An attacker who lands in the container finds that almost nothing on disk can be altered, which closes off a great many of the things they would otherwise try to do.

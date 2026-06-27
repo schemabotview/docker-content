@@ -1,0 +1,9 @@
+Layers and the union filesystem.
+
+Almost every instruction in a dockerfile produces a new layer, a tarball of what changed relative to the layer below it. Those layers are stacked from the bottom up, and a union filesystem driver inside the docker daemon merges them so the container sees a single, ordinary root filesystem.
+
+Picture the stack from the bottom. Layer one is the debian root filesystem, read-only. Layer two installs python, read-only. Layer three installs flask, read-only. Layer four copies your app into slash app, read-only. And on top of all of them sits the writable container layer, where anything a running container changes actually gets written.
+
+On linux the default driver is overlay-two, which uses the kernel's overlay filesystem feature to merge those directories with copy-on-write behaviour. Reads fall through the stack and are served from the topmost layer that has the file. Writes trigger a copy-up, where the file is copied from its read-only layer into the writable layer and modified there, leaving the original untouched. And deletes are recorded as whiteout markers in the writable layer that simply hide the entry below.
+
+Two consequences fall out of this, and both matter every day. First, layers are cached. When you rebuild and the first seven instructions have not changed, the daemon reuses those seven layers and only re-runs from the eighth onward. That is exactly why instruction order matters, and why you put rarely-changing steps, like installing dependencies, before frequently-changing steps, like copying your source code. Second, the writable layer is ephemeral. When you remove the container, that layer is deleted, and anything written into the container's own filesystem, log files, uploaded data, cached downloads, is gone with it. To keep data, you need a volume or a bind mount, which is notebook four.

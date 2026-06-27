@@ -1,0 +1,9 @@
+The mac and windows file-sync caveat.
+
+On linux, containers and the host share the same kernel, so a bind mount is essentially free. The container sees the host's files directly. On mac and windows, though, docker runs a hidden linux virtual machine, and the host's filesystem has to be bridged into it, and that bridge is slow.
+
+How slow. Installing dependencies against a folder that is bind-mounted from a mac can be five to ten times slower than the same operation on a native linux host, and the same penalty hits any directory full of thousands of small files. This is the single biggest performance surprise people hit on docker desktop.
+
+There are three mitigations, in order of preference. The best one is to use volumes for the hot directories, putting things like the dependency folder and build caches into named volumes and bind-mounting only the source files you actually edit. The second is to use the cached or delegated consistency options on a bind mount, which relax strict read-after-write consistency between host and container for a big speed win, though on modern docker desktop these are partially superseded by newer filesystem sharing. The third, for very large source trees, is a dedicated replication tool that syncs the host to a fast directory inside the virtual machine, which is heavier to set up and only worth it at the extreme end.
+
+If you remember just one thing from this section, let it be this. Do not bind-mount your dependency folder on a mac. Put it in a named volume.

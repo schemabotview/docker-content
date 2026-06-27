@@ -1,0 +1,9 @@
+Build-kit and docker build-x.
+
+The original docker build engine was straightforward but limited. It was strictly sequential, with no parallelism, no cross-platform builds, and awkward handling of secrets. Since twenty-nineteen, docker has shipped a new build backend called build-kit, and on any modern install it is already the default, so you are very likely using it without thinking about it.
+
+Build-kit changes several things. It builds independent stages of a multi-stage build in parallel. It caches more intelligently. It supports cache mounts, where a run instruction can reuse a package manager's cache across builds without baking that cache into a layer. It supports build secrets, where a run instruction can read a secret from a temporary mount without that secret ever being committed into a layer. It can forward your host's ess-ess-h agent into a build so you can clone private repositories. And it can build images for multiple processor architectures from a single dockerfile on a single machine.
+
+The command-line client that drives build-kit is docker build-x, an extension to docker build that is now the default builder, and most of the time docker build and docker build-x build are interchangeable. The one place the difference shows is a multi-platform build, where you first create a builder that supports multiple platforms, then build with a platform flag listing the architectures you want, and you must push the result, because a multi-platform manifest list can only live in a registry, not in your local image store.
+
+One last tip. To unlock the advanced dockerfile features, like the run mount options, you add a syntax pragma as the very first line of the dockerfile, which tells build-kit to pull the latest dockerfile frontend at build time.

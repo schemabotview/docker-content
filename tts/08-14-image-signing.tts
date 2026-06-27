@@ -1,0 +1,7 @@
+Image signing.
+
+Here is the question signing answers. How does the runtime know that the image it just pulled was actually built by your continuous integration, and not swapped out at the registry. The answer is a cryptographic signature over the image, tied to its digest.
+
+The modern, widely adopted tool is cosign, part of the sig-store project. You sign with a private key, or keyless using your continuous-integration system's identity, and you verify with the matching public key. The signatures are stored as separate artifacts in the registry, associated with the image's digest, and a kubernetes cluster can be configured to refuse to schedule images that are not signed. There is also an older mechanism built into the docker client itself, where turning on a content-trust environment variable makes pushes sign automatically and pulls verify and fail on anything unsigned. That older approach is less commonly used today, with cosign having largely taken over.
+
+What signing actually buys you is threefold. It gives you an origin guarantee, so you know the image was built by whoever holds the signing key. It gives you integrity, so a re-push cannot silently impersonate a trusted image, because signatures do not move on their own. And it gives you an audit trail, so you can prove which images were genuinely promoted through your pipeline by checking their signatures. In short, signing turns I think this is our image into I can verify this is our image.

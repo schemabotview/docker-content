@@ -1,0 +1,7 @@
+Networks and volumes in compose.
+
+You can use compose for years without ever declaring an explicit network, because the default one is perfectly fine. But there are two reasons you might add your own. The first is tier separation. Picture a web app where the reverse proxy can see the a-p-i, the a-p-i can see the database, but the proxy cannot reach the database directly. You arrange that by putting the proxy on a front-end network, the a-p-i on both the front-end and back-end networks, and the database on the back-end only. The a-p-i in the middle is the only bridge between the tiers. The second reason is connecting to an external network created outside this compose file, by another project or by hand, which you do by marking the network as external.
+
+Volumes work just as they did in notebook four. You declare named volumes at the top level and reference them in the services. The advantage in compose is that the volume's lifecycle is tied to the project, so tearing the stack down with the volumes flag removes it, while a plain tear-down leaves it to persist across up and down cycles.
+
+Bind mounts use a host path directly, and compose resolves relative paths against the directory of the compose file itself, not against wherever you happened to run the command. That is exactly why a relative source path for your source code works no matter which directory you launched compose from, which is a small but genuinely useful convenience.

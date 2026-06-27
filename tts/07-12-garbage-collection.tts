@@ -1,0 +1,7 @@
+Garbage collection on a registry.
+
+A registry that has been running for months accumulates thousands of blobs, many of them for tags that were overwritten or for images nothing references anymore. Garbage collection is what sweeps those away. On the open-source reference registry, you stop pushes during collection, or run the registry read-only, and then run its garbage-collect command, ideally with the flag that also removes untagged manifests.
+
+What that actually does is straightforward. It walks every manifest in storage, then walks every blob those manifests reference, and deletes any blob that nothing references. With the delete-untagged flag, it also deletes manifests that no longer have a tag pointing at them, which is the untagged-image case you see in an image listing where the repository shows up as none. So it reclaims both orphaned blobs and orphaned manifests.
+
+On harbor and the cloud registries, you do not run this by hand at all. Garbage collection there is a user-interface or policy concern, where you configure retention rules like keep the last ten tags, or delete builds older than thirty days that are not marked production. The reason any of this matters is that storage grows surprisingly fast. A pipeline pushing one image per commit can build a multi-gigabyte registry within a single quarter, and without garbage collection and a retention policy, that storage bill simply keeps climbing.

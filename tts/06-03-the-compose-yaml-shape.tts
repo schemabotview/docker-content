@@ -1,0 +1,7 @@
+The compose y-a-m-l shape.
+
+The conventional filename is compose dot y-a-m-l, though a couple of older spellings still work for backward compatibility. The smallest valid file is just a few lines, a services block with one service that names an image. That alone is a complete compose file, and bringing it up runs that one service, with docker auto-creating a network for the project and attaching the service to it.
+
+The full top-level structure has a handful of blocks. There is a name for the project, defaulting to the directory name. There is the services block, the heart of the file, where each service has an image or build, plus ports, environment, volumes, dependencies, a healthcheck, a restart policy, and dozens of other possible keys. There are blocks for networks and for volumes, mirroring docker's network-create and volume-create. And there are blocks for configs and secrets, which are more swarm-flavoured but work in compose too. We will meet each of these in turn.
+
+It helps to know what compose does silently when you bring a stack up. It picks a project name, usually the directory name. It creates a default bridge network and attaches every service that does not specify its own. It creates any named volumes and networks declared in the file. It starts services in dependency order. And it tags every container with labels marking which project it belongs to. That last point is exactly how the tear-down command knows what to clean up, because it filters by that project label.

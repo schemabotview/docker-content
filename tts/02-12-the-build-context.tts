@@ -1,0 +1,7 @@
+The build context.
+
+When you run docker build with a trailing dot, that dot is the build context, the directory whose contents the daemon is allowed to see during the build. It is a small detail that people skip over, and it causes a surprising amount of slowness and confusion.
+
+Here is the part most people miss. The entire build context is packaged into a tarball and sent to the daemon before the build even starts. So if you point the build at a directory that happens to contain twelve gigabytes of dependencies across all your projects, you will wait minutes for that upload, even if your dockerfile only copies one small file. And copy and add can only see files inside the context, so trying to copy something from a parent directory above the context root simply does not work, because anything above the root is invisible.
+
+Two practical implications follow. First, set the context as narrowly as you can, running the build from the project root rather than from your home directory. Second, exclude everything the build does not need using a docker-ignore file, which is exactly what we look at next.

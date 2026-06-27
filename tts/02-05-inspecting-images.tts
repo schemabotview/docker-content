@@ -1,0 +1,9 @@
+Inspecting images.
+
+Two commands let you open an image up and see what it actually contains, without ever running it. Both are worth making a habit of, because guessing at an image's behaviour is how surprises happen.
+
+The first is docker image inspect. Give it a reference and it dumps the full j-son configuration, the layers with their digests, the default command, the environment variables, the exposed ports, the user, the working directory, the labels, the architecture, the operating system, and the creation date. This is the source of truth for the question, what will this image do when I run it.
+
+The second is docker image history. It shows the layers in order, which dockerfile instruction created each one, and how big each layer is. This is gold when you are trying to understand why an image is the size it is, because it points straight at the instruction that added the weight.
+
+Used together, these two commands answer most what-is-in-this-image questions on their own. Inspect tells you how it will behave, and history tells you how it was built and where its bulk came from.

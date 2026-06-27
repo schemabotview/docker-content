@@ -1,0 +1,9 @@
+Container exit codes.
+
+When a container exits, it leaves behind an exit code, following the normal unix convention. Zero means success. Anything other than zero means a failure of some kind. You can see it in the status column of docker p-s with the all flag, where it might read exited with code one-three-seven, or you can pull it out explicitly when you need it in a script.
+
+A few codes come up often enough that they are worth memorising. Zero is a clean, successful exit. One is a generic application error. One-two-five means the docker run command itself failed, for example because of a bad flag, and the container never even started. One-two-six means the container's command was found but is not executable. One-two-seven means the command was not found at all.
+
+Then there are the signal-related codes, and these follow a linux convention of one hundred twenty-eight plus the signal number. One-three-zero is the process killed by sig-int, which is signal two, the control-c interrupt. One-three-seven is the process killed by sig-kill, which is signal nine, and this very often means it ran out of memory or someone ran docker kill. And one-four-three is the process killed by sig-term, signal fifteen, which is what a clean docker stop looks like from the process's point of view.
+
+That one hundred twenty-eight plus signal rule is linux, not docker, but docker reports it faithfully. So it is worth remembering one-three-seven for a kill and one-four-three for a graceful stop, because you will see those two constantly.

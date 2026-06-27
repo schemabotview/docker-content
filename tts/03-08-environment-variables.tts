@@ -1,0 +1,9 @@
+Environment variables.
+
+Containerised apps follow the twelve-factor pattern, reading their configuration from environment variables rather than from config files baked into the image. Docker gives you two ways to set them.
+
+The first is inline, with the environment flag, one variable per flag. So you might pass a database u-r-l with one flag and a log level with another. The second is in bulk, with the env-file flag, which points at a file of key-equals-value lines with hash comments, so a long list of settings lives in one tidy file instead of a wall of flags.
+
+When the same variable is set in more than one place, precedence runs from lowest to highest like this. Variables baked into the image with the environment instruction lose to env-files, later env-files win over earlier ones, and inline environment flags win over everything, with the rightmost flag winning on duplicates. Hold that ordering, because it explains a lot of confusing why-is-this-value-not-taking moments.
+
+There is a neat shorthand worth knowing. An environment flag with a name but no value inherits the value from your host shell, which is handy for passing a token into a container without echoing it on the command line. And a caution. Environment variables are widely used for secrets but they are not really secret, because they leak through docker inspect, through the slash proc filesystem, and through crash dumps. Notebook eight covers proper secret handling, including compose secrets, swarm secrets, and build-kit secret mounts.

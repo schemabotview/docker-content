@@ -1,0 +1,7 @@
+Installing docker engine on linux.
+
+The right way to install docker engine for any kind of production use is from docker's official package repositories. Not from your distribution's default repos, which often lag months behind, and not from the convenience script, which is fine for throwaway machines but skips the integrity checks you want for something real.
+
+On the debian and ubuntu family, the path is four steps. You install the prerequisites for fetching packages securely, add docker's official signing key into the keyring directory, add docker's repository to your sources, and then install the packages. That installs five things worth naming, the daemon itself, the docker command-line client, the container runtime, the build-x plugin that gives you the build-kit builder from notebook two, and the compose plugin that gives you compose version two from notebook six. On the red-hat family, the shape is identical, you add the docker repository through the config manager and install those same five packages, adjusting the repository u-r-l for your specific distribution.
+
+There is also the convenience script, a single piped command from docker's get site. It pulls and runs the official install script, and it is genuinely fine for ephemeral machines or for learning. But you should not use it in production, because it does no signature pinning, it is not version-controlled, and it makes future upgrades opaque. For anything you will maintain, the repository path is worth the few extra steps.

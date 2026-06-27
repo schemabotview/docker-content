@@ -1,0 +1,7 @@
+Rolling updates and rollback.
+
+A service update is one of the most common day-to-day swarm operations, and the default behaviour is sensible. When you update a service's image, swarm replaces tasks one at a time, stopping one old task, starting one new task, waiting for it to be ready, and then moving on to the next. By default the batch size is one and there is no pause between batches.
+
+You tune this with a handful of flags. You can update several tasks in parallel, add a delay between batches, and set a monitor window during which swarm watches each new task before declaring it successful, which catches the nasty class of bug where a task starts fine and then crashes twenty seconds later. You can set a maximum failure ratio that aborts the update if too many tasks fail their monitor window, and a failure action that decides what happens on abort, whether to automatically roll back, pause, or continue. These can be set at service creation so they apply to all future updates without re-specifying them each time.
+
+If something does go wrong, you can manually roll back, which reverts the service to its previous specification, since swarm keeps the prior revision in its history. The rollback even has its own symmetric set of tuning flags. The whole point is that deploys become safe and reversible, you roll forward gradually while watching health, and if the new version misbehaves, you, or swarm itself, can return to the known-good version without taking the service offline.

@@ -1,0 +1,7 @@
+Docker hub and the alternatives.
+
+Docker hub is the default registry. When you pull a plain image name, you are pulling from hub. It is free for public images, but anonymous pulls are rate-limited, capped at a number of pulls per address over a rolling window, and a paid tier raises that cap. That rate limit is worth knowing, because it surprises busy pipelines.
+
+There are several major alternatives, each with a natural home. Github's container registry is best for anything that lives on github, free for public images and tightly integrated with github actions, and it is the most common hub alternative for open source today. Amazon's elastic container registry suits amazon workloads with its identity integration, google's artifact registry suits google cloud, and azure's container registry suits azure. Quay, from red hat, fits the red hat and openshift ecosystem. Harbor is the standard self-hosted on-premises registry, with role-based access control, scanning, and replication built in. And the plain open-source reference registry, often referred to by its image name, is what you run for testing or for an air-gapped network.
+
+The freeing part is that you can mix all of these without friction. A team might build in continuous integration, push to github's registry for storage, mirror to amazon's for fast pulls in production, and run a local harbor for on-premises clusters. Because it is all the same protocol and the same digests, only the u-r-l changes. The images themselves are identical wherever they live.

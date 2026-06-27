@@ -1,0 +1,9 @@
+A real build, a python flask app.
+
+Let us put all of this together and build a tiny flask app. There are just three files, the app itself, a requirements file, and a dockerfile, plus a docker-ignore.
+
+The app is a single-route flask app that returns a small j-son greeting and listens on all interfaces on port eighty-eighty. The requirements file pins flask to a specific version. And the dockerfile starts from a slim python base, sets a couple of environment variables that keep python from writing byte-code and keep its output unbuffered, sets the working directory to slash app, copies the requirements file in, installs the dependencies, copies the app in, creates a non-root user and switches to it, exposes port eighty-eighty, and sets the command to run the app. The docker-ignore keeps the dot git directory, byte-code caches, the virtual environment, and the environment file out of the context.
+
+When you run the build, you see a sequence of numbered step lines, one per instruction, each becoming a layer, ending with exporting the image and naming it. The interesting part is what happens on a rebuild. If nothing changed, every step shows as cached and the build finishes in milliseconds. If you change only the app file, only the steps from the app copy onward re-execute, because the earlier layers are still cache hits. That is the layer cache working for you.
+
+And that is the whole reason for one big rule. Put instructions that change rarely, like installing dependencies, before instructions that change often, like copying source. That is precisely why copying the requirements file and installing come before copying the app, so that editing your code does not throw away the expensive dependency-install layer.

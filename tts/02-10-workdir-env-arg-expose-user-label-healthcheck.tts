@@ -1,0 +1,11 @@
+The supporting cast, work-dir, environment, arg, expose, user, label, and health-check.
+
+These instructions are each small on their own, but together they shape how the image behaves when it runs. Let us walk through them quickly.
+
+Work-dir sets the working directory for the instructions that follow, and for the container's process. It is like changing directory between instructions, and it creates the directory if it does not exist. Prefer it over running a change-directory inside a run, because work-dir actually persists across instructions whereas a shell change-directory does not.
+
+Environment sets a variable that is visible both at build time and at run time, baked into the image's configuration. Arg, by contrast, is a build-time-only variable, not present when the container runs, passed in with a build-arg flag, and handy for things like a dependency version or a build-time feature flag.
+
+Expose is pure documentation that the container listens on a given port. It does not actually publish anything. Publishing happens at run time, in notebook five. User sets the default user that later run instructions and the main process run as, and since the default is root, which you do not want in production, you usually pair it with a run that creates a non-root user first.
+
+Label attaches arbitrary metadata to the image, and there are conventional labels for the source, version, and license that registries and tooling read. And health-check tells docker how to probe whether the container is healthy. The daemon runs your probe command on an interval, the container's status reflects pass or fail, and orchestrators like swarm use that signal to decide when to send the container traffic.

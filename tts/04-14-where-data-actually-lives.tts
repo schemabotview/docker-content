@@ -1,0 +1,9 @@
+Where data actually lives.
+
+For curiosity and for troubleshooting, it helps to know the on-disk layout on a typical linux docker installation, which all sits under slash var slash lib slash docker.
+
+Inside there, the overlay-two directory holds the image and container layer data, with each layer in its own subdirectory containing the actual files for that layer and pointers to its parent layers. The volumes directory has one subdirectory per named volume, each with an inner data folder where the volume's contents actually live. The containers directory has one subdirectory per container, holding its configuration and the j-son log file that the default logging driver writes. And there are further directories for image metadata, network state, and installed plugins.
+
+Knowing this layout unlocks a few troubleshooting moves. To free up disk, the disk-usage command with the verbose flag shows you the breakdown, and measuring the size of the overlay-two directory reveals fat layers that a prune can then remove. To find a volume's contents from the host, you inspect the volume for its mount point and list that path directly. And to read a stopped container's logs without docker logs, you can tail its j-son log file straight from the containers directory.
+
+One important caveat. On mac and windows, all of these paths live inside the docker desktop virtual machine, not on your actual machine's filesystem, so you cannot list them from your own shell, only from inside containers. Docker desktop's settings panel exposes the virtual machine's disk usage instead of giving you direct access.

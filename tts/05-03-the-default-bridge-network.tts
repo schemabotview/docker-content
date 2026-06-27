@@ -1,0 +1,7 @@
+The default bridge network.
+
+When you install docker, you get a network simply called bridge, backed by a linux bridge named docker zero on the host. Every container you start without specifying a network lands here, and listing your networks shows this bridge alongside the host and none networks.
+
+This default bridge works, but it has two annoying limitations. The first is that it has no embedded d-n-s. Containers on the default bridge can only reach each other by eye-pee, so two containers named web and a-p-i cannot resolve each other by name, and you are stuck looking up addresses with docker inspect. The second is weaker isolation, because every container without an explicit network joins this same shared bridge. That means a throwaway container you ran for some unrelated test can talk to your development database sitting on the very same bridge.
+
+For both of these reasons, the guidance is straightforward. Use a user-defined bridge instead. The default bridge is mostly a historical default, and you should not rely on it for anything you actually care about. The next section shows how little it takes to do better.

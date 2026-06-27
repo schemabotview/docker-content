@@ -1,0 +1,13 @@
+Why docker matters.
+
+If you work anywhere near software today, you are standing on containers whether you have noticed or not. Let me show you where they already are.
+
+Every cloud runs them. Amazon's elastic container service and elastic kubernetes service, google cloud run and google kubernetes engine, azure container instances and azure kubernetes service. When you deploy a service to any modern cloud, you are almost always shipping a container image.
+
+Kubernetes itself does not replace docker. It orchestrates containers that are built and packaged the way docker established. So learning docker is the natural step before kubernetes, not a competing one.
+
+Your build pipelines run on containers too. Github actions, gitlab see-eye, circle see-eye. Each step usually runs inside a container so the build behaves the same on every machine.
+
+And on your own laptop, bringing up a database, a cache, and your service together with one docker compose command has replaced installing five separate tools by hand for most teams. The old joke, it works on my machine, mostly died when teams started shipping the machine itself.
+
+There is also a concrete goal at the end of this road. The docker certified associate exam, abbreviated dee-see-ay, is the most widely recognised docker certification, and this course is built to carry you from zero all the way to ready to sit it. By notebook ten you will have touched every domain the exam tests.

@@ -1,0 +1,9 @@
+The five built-in drivers.
+
+Docker ships with a handful of network drivers, and five of them matter. Knowing which is which tells you immediately what kind of connectivity a container has.
+
+Bridge is the default. Each container gets a private eye-pee on a linux bridge, outbound traffic is network-address-translated, and inbound only arrives if you publish a port. This covers the overwhelming majority of single-host work. Host shares the host's network namespace entirely, so there is no isolation and the container's processes bind directly to the host's interfaces, which you reach for when you need maximum network performance or raw access to the host's networking. None gives the container a namespace with only a loopback interface and no external connectivity at all, useful for a sandbox or forensic analysis where you explicitly want zero network.
+
+The last two are about reaching beyond one host. Overlay spans multiple machines, letting containers on different physical hosts see each other on one virtual network, built on a tunnelling technology, and it is what docker swarm uses, which is notebook nine. Mac-vlan, and its cousin eye-p-vlan, gives a container a real address on the host's physical local-area network so it looks like a distinct machine to the rest of the network, which is an edge-case tool, not a general one.
+
+There are also third-party plugins like calico and cilium, but those are mostly relevant in kubernetes. For plain docker, these five built-ins cover almost everything you will ever need.

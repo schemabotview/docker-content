@@ -1,0 +1,9 @@
+Live-updating limits, docker update.
+
+For a container that is already running, you can change some of its runtime settings without restarting it, and docker update is the command. You might raise its memory limit and see-pee-you allowance on the fly, or flip its restart policy.
+
+The settings you can change at runtime are the resource limits, including memory, swap, the see-pee-you flags, and the process-I-D limit, plus the restart policy and the block input-output weight. These are all things the kernel can adjust on a live control group, so they take effect immediately.
+
+The settings you cannot change at runtime are the ones tied to how the container was created. That includes anything to do with networking, like port mappings, the network mode, and the hostname, as well as volumes and mounts, environment variables, the image itself, and the entry-point, command, and user. To change any of those, you have to stop, remove, and re-create the container.
+
+The everyday use case for docker update is the container that is using too much memory and getting killed for it, where you want to raise the limit without losing its current state. The other common one is flipping a container's restart policy to unless-stopped so that it survives the next daemon restart, again without having to tear it down and build it back up.

@@ -1,0 +1,7 @@
+Volume drivers.
+
+Every volume has a driver, which is the plugin that actually stores the bytes. The default is called local, and it just means a directory on this host's own filesystem. For most single-host work, that is all you ever need.
+
+You can choose a different driver when you create a volume. The most common non-default choice is still the local driver but with options that point it at a network share over n-f-s, or at a ram disk, which lets you mount either of those as an ordinary docker volume. Beyond that, third-party plugins extend the list much further, to cloud block storage like amazon's elastic block store, to distributed filesystems like gluster and ceph, and to object-storage shims that present something like s-three as a filesystem.
+
+The practical takeaway is about scale. For a single-host docker installation, the default local driver is what the overwhelming majority of teams use, and reaching for anything fancier is usually premature. Drivers really start to matter when you move to a multi-host orchestrator, where storage has to follow a container as it moves between machines. Kubernetes has its own storage-interface ecosystem for this, and swarm uses docker's volume drivers directly to share state across nodes.

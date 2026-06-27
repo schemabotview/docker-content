@@ -1,0 +1,7 @@
+Rootless docker, the alternative install.
+
+This is a recap of notebook eight, now from the install angle. Rootless docker runs the daemon as your own unprivileged user rather than as root, and it has its own install path. As your normal user, not with sudo, you run docker's rootless install script, then follow its printed instructions to put the rootless binaries on your path and to set the environment variable that points your client at the rootless daemon. After that you enable and start the daemon as a user-level service, and you can confirm it worked by checking that the daemon reports rootless among its security options.
+
+The rootless daemon handles networking through a userspace proxy and stores all of its state under your own home directory rather than the system-wide location. So everything it does is scoped to your account, which is exactly the point.
+
+The trade-offs are the same ones notebook eight laid out. Networking is somewhat slower, the privileged flag is unavailable, and the daemon cannot write host firewall rules. In exchange, you get a much smaller attack surface, because there is no root daemon to compromise and a container escape only yields your own user's privileges. For shared development hosts and continuous-integration runners, that is usually a trade well worth making.

@@ -1,0 +1,11 @@
+The three mount types.
+
+Docker gives you three flavours of mount, and almost every storage decision comes down to picking the right one. Let us lay them side by side.
+
+A volume lives in a docker-managed area on the host, and its lifecycle is independent of any container, so you delete it explicitly when you mean to. It is the best choice for persistent application data, things like database files and uploads, anything that should outlive a container.
+
+A bind mount lives at an arbitrary path on the host filesystem, and its lifecycle is just that path's lifecycle, because docker never manages it. It is the best choice for local development, where you mount your source code into the container, along with config files.
+
+A t-m-p-f-s mount lives in the host's ram, and its lifecycle is the container only, vanishing when the container stops. It is the best choice for sensitive scratch data that should never hit disk, and for high-throughput caches.
+
+The mental rule is simple. Use a volume by default. Use a bind mount when you specifically need a particular path on the host. And use a t-m-p-f-s mount when the data should never touch the disk at all. The rest of this notebook unpacks each one in turn.

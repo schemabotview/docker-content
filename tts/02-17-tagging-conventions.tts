@@ -1,0 +1,9 @@
+Tagging conventions.
+
+Tagging is policy, not technology. Docker does not care what you write after the colon. But teams that ship images seriously all converge on a small set of patterns, and it is worth knowing them.
+
+Start with what the latest tag actually means, which is nothing. It is simply the default tag used when you do not specify one. Latest is not the newest version. It is just a tag named latest that someone chose to push, or chose not to. Treat it as a convenience for hello-world and dev-only images, and never deploy it to production, because then your deploy becomes whatever happened to be there when the container last restarted, which is the opposite of reproducible.
+
+The patterns you will see in the wild are a handful. A semantic version, like one point four point two, which is clean and what humans want to read. A sliding semantic version, where one point four, and one, and latest all re-point to the newest matching build, which is common for language base images so consumers choose how aggressively to pin. A git commit hash, which uniquely identifies the exact source that built the image, great for continuous integration but not friendly to humans. A date, for nightly snapshots where versions do not apply. And a channel name, like stable or edge or release-candidate, re-pointed as builds get promoted.
+
+For the strictest reproducibility, pin by digest in production. A tag can always be re-pushed, but a digest cannot change, so a deployment manifest that pins by digest gives you byte-identical rollbacks years later. And remember that re-tagging is free. Docker tag just adds another name pointing at the same digest, so you can tag one built image with several names and push all of them, and the layers upload zero new bytes because they are content-addressed and already on the registry. Only the tag pointers get updated.

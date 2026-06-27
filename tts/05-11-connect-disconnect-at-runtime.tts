@@ -1,0 +1,7 @@
+Connect and disconnect at runtime.
+
+A container can be attached to several networks at once, and you can change those attachments without restarting it. You create the networks you want, start a container on one of them, then connect it to another so it lives on both, and disconnect it from one to remove that attachment. The container stays running the whole time.
+
+There are two common uses for this. The first is tiered applications. Imagine a reverse proxy on a front-facing network and a database on a back-end network, with the a-p-i server attached to both. The proxy cannot see the database directly, and the database is not reachable from the public side at all. The a-p-i in the middle is the only thing bridging the two tiers, which is a clean and secure topology. The second use is adding a debugger, where you attach an existing running container to a temporary inspection network alongside a packet-capture sidecar, look at what you need, and detach again.
+
+One practical limitation to remember. The network flag at start time only takes a single network. So to bring a container up on more than one network from the very beginning, you start it on one, then connect the others before the application starts caring about them. After that, runtime connect and disconnect handle everything else.

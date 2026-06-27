@@ -1,0 +1,7 @@
+Manifest lists, one tag, many architectures.
+
+A single tag can work on an intel mac, an apple-silicon mac, an x-eighty-six server, and an arm raspberry pi all at once. The way it does that is that the tag does not point at one image manifest. It points at a manifest list, officially the open container initiative image index, which is a thin j-son object listing one per-architecture manifest for each platform it supports.
+
+Picture a tag pointing at a manifest list, and that list having three entries, one for each architecture, each entry pointing at the manifest for that platform, which in turn points at that platform's layers. When you pull the tag on an arm machine, the daemon fetches the manifest list, picks the entry matching its own platform, and pulls only that manifest's layers. The other architectures' bytes are never downloaded at all, so you get the right image for your hardware automatically and pay only for what you use.
+
+Building one yourself is one command with build-x. You create a builder that supports multiple platforms, then build with a platform flag listing the architectures you want, a tag, and a push, all pointing at your project. The push is mandatory here, because a manifest list can only exist in a registry, not in a local image store. After that single command, the one tag works on every architecture you listed. And you can inspect any manifest list with the image-tools command, which shows its media type, digest, and the platform of each entry, so you can confirm exactly which architectures a tag covers.

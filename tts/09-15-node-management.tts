@@ -1,0 +1,7 @@
+Node management.
+
+Listing the nodes shows every node and its availability state, and there are three such states. Active means the node accepts new tasks, and it is the default. Pause means the node keeps running its existing tasks but will not accept new ones. And drain means the node will not accept new tasks and swarm actively re-schedules its existing tasks elsewhere, which is exactly how you take a node down for maintenance without dropping replicas below their target.
+
+The maintenance pattern follows from that. You set a node to drain, wait until its tasks have all moved off, do your maintenance like a reboot or a kernel upgrade, and then set it back to active. This is the rolling host-upgrade workflow, and combined with rolling-update services, it lets you take an entire cluster through a kernel or operating-system upgrade without ever taking traffic offline.
+
+A couple of other operations round this out. You can promote a worker into the manager set or demote a manager back to a worker without rebuilding anything, which is how you grow from one manager to three for high availability, or shrink before removing a node. And to remove a node, it leaves the swarm from its own side, with extra care for managers because of the quorum implications, after which you clean up its entry from a manager. All of this is the everyday cluster-operations toolkit that keeps a swarm healthy over time.

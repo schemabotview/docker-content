@@ -1,0 +1,7 @@
+Services, not containers.
+
+The fundamental unit in swarm is not a container, it is a service. A service is a declaration that says, I want this many replicas of this image running across the cluster, with these networks, secrets, environment, resources, and update policy, now make it so. The orchestrator then decomposes that service into tasks, one per replica, schedules each task onto a node, and creates a container to run it. The container is just an implementation detail underneath the task.
+
+You create a service much as you would run a container, naming an image, a replica count, and a published port. Listing services shows the desired and running replica counts, and listing a service's tasks shows the individual replicas and which nodes they landed on. The magic is in the reconciliation. If one of those nodes crashes, the manager notices, re-schedules its task somewhere else, and restores the full replica count automatically, with no action from you.
+
+There are two service modes. Replicated is the default, where you ask for a number of tasks and the scheduler decides where to place them, and it covers the great majority of cases. Global runs exactly one task on every node, which is what you want for per-node agents like log shippers, monitoring exporters, and security tools, and it grows automatically as you add nodes to the cluster. Choosing between them is really choosing between, I want this many copies somewhere, and, I want one copy on each machine.

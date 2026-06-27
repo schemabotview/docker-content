@@ -1,0 +1,7 @@
+Overrides, layering compose files.
+
+You will often want different settings for development, for continuous integration, and for production, and compose gives you two mechanisms for that. The first is automatic. If a file named compose-override sits next to your base compose file, compose loads both and merges them, with the override winning on conflicts. The convention is that the base file is the production-ish definition and the override file holds development-only tweaks and is kept out of git, so a new developer can clone the repo, bring it up, and get a dev-friendly stack with no extra steps.
+
+The second mechanism is explicit stacking, where you pass several files in order and later ones override earlier ones. This lets you keep a base file plus separate files for production or continuous integration, and combine them as needed, which is far cleaner than juggling a tangle of environment variables for any non-trivial deploy.
+
+It helps to know how the merge actually works, because it is not uniform. Scalar values, like an image name or a restart policy, are simply replaced by the override. Lists, like ports or volumes, are appended rather than replaced, so watch out for unexpected duplicates. And maps, like an environment block written as key-value pairs, merge key by key. Whenever the result is unclear, the config command prints the fully resolved y-a-m-l so you can see exactly what compose ended up with.

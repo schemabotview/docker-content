@@ -1,0 +1,9 @@
+Anonymous volumes and the volume instruction.
+
+There are two ways to end up with a volume you never explicitly named, and both can surprise you.
+
+The first is an anonymous volume from the volume flag. If you give the flag just a container path with no source, docker creates a volume with a random name and mounts it there. The trouble is that these accumulate forever unless you clean them up, either with the remove-on-exit flag, which deletes them along with the container, or with a volume prune, which removes the anonymous volumes nothing is using.
+
+The second is the volume instruction in a dockerfile. It declares that a path will be a volume, so when you run the image without specifying a mount for that path, docker automatically creates an anonymous volume there. The intent is to protect data, saying this path must not live on the throwaway writable layer. It is how the official database images stop users from accidentally putting their database on the writable layer.
+
+Two gotchas come with this. First, you will accrue orphan anonymous volumes if you neither mount a named volume at those paths nor use the remove-on-exit flag, and a volume prune is the cleanup. Second, the volume instruction is sticky. Once an image declares it, you cannot easily un-declare it in a derived image. So avoid the volume instruction in your own dockerfiles unless you genuinely need it, and let the user or the compose file decide on mounts.

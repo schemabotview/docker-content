@@ -1,0 +1,7 @@
+Meet the dockerfile.
+
+A dockerfile is a plain text recipe for building an image. By convention the file is named dockerfile, with no extension, and it lives in the root of your project. The simplest possible one is two lines, a from instruction picking a base image like alpine, and a command instruction telling it what to run.
+
+The workflow around it is just as simple. You run docker build with a tag flag and a build context, which reads the dockerfile, executes its instructions in order, builds a new image, and tags it with the name you gave. Then docker run starts a container from that image. That is the whole loop. Everything else in this notebook is really just answering two questions, which instructions can go in a dockerfile, and how do you choose between them.
+
+It helps to carry one mental model of how a build executes. Conceptually, each instruction either adds a layer or modifies the configuration blob. The filesystem-changing instructions, run, copy, and add, run inside a temporary container based on the previous layer and then commit the result as a brand new layer of bytes. The metadata-only instructions, like command, entry-point, environment, work-dir, user, expose, label, and arg, change nothing on disk. They only edit the image's j-son configuration. Knowing which kind each instruction is helps you reason about both caching and final image size, and that intuition pays off constantly.

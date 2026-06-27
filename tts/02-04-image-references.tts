@@ -1,0 +1,9 @@
+Image references, the full name of an image.
+
+When you wrote docker run n-ginx, you used a heavily abbreviated name. The full image reference has five parts. A registry host, with an optional port, then a slash, then a namespace, then a slash, then the repository, then a colon and a tag, and finally an at sign and a digest.
+
+Every one of those parts has a default, and that is why the short forms work. Plain n-ginx expands to library slash n-ginx, because library is the namespace where docker hub keeps its official images. Library slash n-ginx expands to docker dot eye-oh slash library slash n-ginx, because docker hub is the default registry. And with no tag, it expands to the tag latest, because latest is the default tag. The important warning here is that latest does not mean newest. It is just a tag that happens to be named latest. A fully pinned reference names the registry, the namespace, the repository, a specific version tag, and a digest, all at once.
+
+A few examples to get your eye in. Ubuntu means docker hub's library ubuntu at the latest tag. Python tag three point twelve slim names a specific python variant on docker hub. My-org slash a-p-i tag v two point one point zero is a team's own image on docker hub. The same name under g-h-c-r dot eye-oh is that image hosted on github's container registry instead. And a name with a host and a port, like registry dot example dot com colon five-thousand slash internal slash billing tag prod, points at a private registry.
+
+Finally, keep the difference between a tag and a digest sharp. A tag like one point twenty-seven point zero can be re-pointed at a new image by the publisher at any time, so it is mutable. A digest is the s-h-a two-five-six of the manifest, so it is immutable by construction. Pull the same digest today or ten years from now and you get the byte-for-byte identical image. That is why production deployments often pin by digest.

@@ -1,0 +1,9 @@
+Multi-stage builds.
+
+Compiled languages like go, rust, java, and c-plus-plus need a whole toolchain at build time that they do not need at run time. You really do not want your production image shipping a compiler, build headers, or a java development kit, both for size and for security. Multi-stage builds solve this cleanly.
+
+The idea is to write multiple from blocks in one dockerfile. The final image contains only the last stage, and the earlier stages act as scratch pads that get thrown away. Take a go service. The first stage starts from a fat go-lang image, named builder, pulls in the source and dependencies, and compiles the binary. The second stage starts fresh from a tiny distroless base, copies just the compiled binary out of the builder stage, runs as a non-root user, and sets the entry-point. The fat builder, with its compiler and source and caches, never makes it into what you ship.
+
+The payoff is dramatic. A go service that would be one point five gigabytes with the full software development kit becomes around fifteen megabytes. That means faster pulls, far fewer vulnerabilities in the image, and no toolchain sitting there for an attacker to use.
+
+The pattern applies anywhere there is a build phase distinct from a run phase. For node, install and build in stage one and copy the output and production dependencies into a slim stage two. For python, install into a virtual environment in stage one and copy that environment into a slim stage two. For java, package the jar in stage one and copy it into a runtime-only java image in stage two. And you can build only up to a named stage with the target flag, which is handy in continuous integration, where you test in the builder stage and deploy from the runtime stage.

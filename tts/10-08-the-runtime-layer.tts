@@ -1,0 +1,7 @@
+The runtime layer.
+
+Recall from notebook one that the daemon does not actually run containers itself. The container runtime supervisor talks to the low-level runtime, which does the namespace, control-group, and process-execution work. You usually never touch this layer, but it is worth knowing the cases where you might.
+
+There are a few alternative low-level runtimes. One is a c-based reimplementation of the default runtime that starts containers dramatically faster and is a low-risk drop-in replacement. Another runs each container inside a lightweight virtual machine, which is heavier but gives real hardware isolation, used in multi-tenant clusters where sharing one kernel is not trusted enough. A third implements much of the linux system-call surface in userspace as a sandbox, giving strong isolation at a modest performance cost, used by some large platforms. To use any of them, you register it in the daemon configuration and then select it per container with a runtime flag, so you can run most workloads on the default and reserve the stronger isolation for the ones that need it.
+
+One more useful fact. The runtime supervisor can run without docker at all, and kubernetes uses it directly through a standard runtime interface. That is why a single machine's docker daemon and a kubernetes node can share one runtime instance, and why docker and the kubernetes client can sometimes see overlapping containers on the same host. It is a reminder that docker is one front end over a runtime stack that is shared across the wider container ecosystem.

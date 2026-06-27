@@ -1,0 +1,9 @@
+Copy versus add.
+
+Both of these instructions copy files from the build context into the image, and they differ only in scope. Knowing where they differ keeps you out of a couple of classic traps.
+
+Copy takes a source and a destination and copies files or directories. That is all it does. No magic, fully predictable. Add does everything copy does, plus two extra behaviours. If the source is a u-r-l, add downloads it. And if the source is a local tar archive, add automatically extracts it into the destination.
+
+Those extras sound convenient, but they are also footguns. The auto-extraction is surprising and easy to forget, and the u-r-l form quietly sidesteps your build-cache discipline and re-downloads on changes. So the modern best practice is simple. Use copy by default. Reach for add only when you specifically want that tar auto-extract behaviour. And when you need to fetch something from a u-r-l, use a run instruction with curl or w-get instead, so the download is explicit and cache-friendly.
+
+Both instructions also honour two useful options. Change-owner lets you set the user and group that owns the destination files, and from lets you copy out of another build stage. That second one is the heart of the multi-stage feature, which is coming up shortly.

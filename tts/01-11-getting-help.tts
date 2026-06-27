@@ -1,0 +1,9 @@
+Getting help.
+
+You are not going to memorise every flag of every command, and the good news is you do not need to. Docker ships with genuinely excellent built-in help, and learning to lean on it is a real skill.
+
+There are three levels. Docker with the help flag gives you the top-level list of commands. Then the object with the help flag, for example docker container help, lists every verb you can apply to that object. And the object, the verb, and the help flag together, for example docker run help, shows every flag for that one specific command. That last page, the help for docker run, is probably the single most-read help screen in all of docker.
+
+When the built-in help is not enough, go to the docs. The official reference at docs dot docker dot com is searchable and current, and its command-line section is the place for the full detail. On top of that, every official image on docker hub has its own read-me explaining its tags, environment variables, and volumes, and those are often the fastest way to learn how to actually use an image.
+
+So the flow when you are stuck is simple. Try the command with the help flag first, because it is instant and usually has the flag you forgot. Then reach for the docs site when you want a tutorial or a deeper conceptual explanation.

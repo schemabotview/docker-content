@@ -1,0 +1,15 @@
+Getting docker installed.
+
+You only ever learn docker by running containers, so before anything else you need a working docker on a machine you can reach. There are four common ways to get one, and they trade off ease against authenticity.
+
+The first is docker desktop. This is the gentlest path for a laptop. It is free for personal use, paid for larger companies, and runs on mac operating system, windows, and linux. You install it, launch the app, and the docker command is on your path. It bundles a graphical view of your images and containers, docker compose, and a kubernetes toggle. The catch is that on mac and windows it quietly runs a small linux virtual machine, because containers need a linux kernel, and that means file sharing between host and container can be slow.
+
+The second is docker engine installed directly on a linux box. This is the real thing, with no virtual machine in the way, and it is the fastest experience and what production actually uses. The only cost is that you need a linux host, which is more friction if your daily machine is a mac or windows laptop.
+
+The third is colima, an open-source alternative to docker desktop for mac and linux. It spins up a small lima virtual machine and runs docker engine inside it. It is free for everyone and very mac-friendly, though it is command-line only and takes slightly more setup.
+
+The fourth is a cloud virtual machine. Spin up a small linux server on a provider like digital ocean or amazon, install docker engine, and ess-ess-h in to use it. This is the most production-like experience and you can break and rebuild it freely. It costs a few dollars a month and needs a connection, which adds a little day-to-day friction.
+
+My advice. If you are on a laptop, docker desktop or colima is the path of least resistance. A cloud virtual machine is the most authentic. Pick one and stick with it for the whole course.
+
+Once it is installed, two commands tell you it is healthy. Docker version prints both the client and the server versions, and if you see both, the daemon is running and you can talk to it. Docker info prints the daemon's configuration, including the storage driver, the logging driver, the kernel version, and how many containers you have. Run those two and confirm they work before moving on.

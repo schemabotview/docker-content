@@ -1,0 +1,7 @@
+The everyday commands.
+
+Compose has a tidy set of subcommands that mirror the single-container ones, just scoped to the whole stack. Bringing the stack up creates and starts every service, with a detached flag for the background and a build flag to rebuild images first. Tearing it down stops and removes the containers and the project network, with optional flags to also remove named volumes and images. Listing shows the project's containers and their state.
+
+For day-to-day work, a few more come up constantly. Tailing logs follows a service's output. Exec runs a command inside a running service, the compose equivalent of docker exec. Run spins up a fresh one-off container of a service to run a single command, which is how you do tasks like database migrations. Build rebuilds images for services that have a build section, pull fetches the latest images for services that reference one, and restart, stop, and start manage running services without re-creating them.
+
+Two diagnostic commands are worth highlighting. The config command prints the fully resolved y-a-m-l, after variable substitution and all overrides are applied, and it is the very first thing to run whenever the stack is not doing what you expected. And the top command is like inspecting processes, but across the whole stack. In practice the commands you will live in are bring-up detached, tear-down, and follow-logs, closely followed by exec for debugging and config when something is mysterious.
